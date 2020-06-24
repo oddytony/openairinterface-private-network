@@ -1,0 +1,74 @@
+# Using ubuntu 18 bionc as base image
+FROM ubuntu:bionic
+
+ARG GIT_TAG=latest
+LABEL name="oai-build-base" \
+      version="${GIT_TAG}" \
+      io.k8s.description="Ubuntu base Image containing all build dependencies for openairinterface5g and openair-cn."
+
+WORKDIR /root
+RUN apt update && apt install -y \
+        git make cmake gcc g++ autoconf automake bc bison flex libtool patch \
+        libatlas-base-dev \
+        libblas3 \
+        libblas-dev \
+		liblapack3 \
+		liblapack-dev \
+        libboost-dev \
+        libbzip2-dev \
+        check \
+        libelf-dev \
+        libgflags-dev \
+        libgoogle-glog-dev \
+        libgmp-dev \
+        libgnutls-dev \
+        libguile-dev \
+        linux-headers-generic \
+        libasan2 \
+        libconfig-dev \
+        libevent-dev \
+        libffi-dev \
+        libgcrypt-dev \
+        libidn11-dev \
+        libidn2-dev  \
+        libtool \
+        libusb-dev \
+        libxml2-dev \
+        libxpm-dev \
+        libxslt-dev \
+        libyaml-dev \
+        lksctp-tools \
+        libsctp-dev \
+        liblz4-dev \
+        libmariadbclient-dev \
+        nettle-dev \
+        openssh-client \
+        openssh-server \
+        openssl \
+        libssl-dev \
+        pkg-config \
+        protobuf \
+        protobuf-c \
+        protobuf-c-compiler \
+        libprotobuf-c-dev \
+        psmisc \
+        python2 \
+        python2-docutils \
+        python2-requests \
+        vim-common \
+        liblzma-dev \
+        zlib1g-dev \
+        libforms-dev \
+        libforms-bin \
+		asn1c \
+		
+	&& apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip2 install --user mako pexpect
+
+RUN if [ "$EURECOM_PROXY" == true ]; then git config --global http.proxy http://:@proxy.eurecom.fr:8080; fi
+
+# build packages not in ubuntu repo
+COPY patches patches/
+COPY scripts scripts/
+RUN scripts/build_missing_packages2
