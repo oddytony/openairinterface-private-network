@@ -63,7 +63,7 @@ RUN apt-get update && apt-get install -y \
         libforms-dev \
         libforms-bin \
 		libuhd-dev \
-		libuhd003 \
+		libuhd003.010.003\
 		uhd-host \
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
