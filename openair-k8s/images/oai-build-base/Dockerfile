@@ -71,4 +71,4 @@ RUN if [ "$EURECOM_PROXY" == true ]; then git config --global http.proxy http://
 # build packages not in ubuntu repo
 COPY patches patches/
 COPY scripts scripts/
-RUN scripts/build_missing_packages2
+RUN chmod a+x scripts/build_missing_packages2 && scripts/build_missing_packages2
