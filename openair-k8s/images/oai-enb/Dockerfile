@@ -1,5 +1,5 @@
 ARG REGISTRY=localhost
-FROM $REGISTRY/baseimage AS builder
+FROM $REGISTRY/oai-build-base AS builder
 
 ARG GIT_TAG=v1.1.1
 
@@ -16,22 +16,28 @@ RUN cd openairinterface5g/cmake_targets \
     && ln -sf /usr/local/share/asn1c_oai /usr/local/share/asn1c \
     && ./build_oai -c --eNB -w USRP --verbose-compile
 
+FROM ubuntu:bionic
 
-FROM registry.redhat.io/ubi8/ubi
 LABEL name="oai-enb" \
       version="$GIT_TAG" \
-      maintainer="Frank A. Zdarsky <fzdarsky@redhat.com>" \
+      maintainer="Ighagbon Anthony <signormca@yahoo.com>" \
       io.k8s.description="openairinterface5g eNB $GIT_TAG." \
       io.openshift.tags="oai,enb" \
       io.openshift.non-scalable="true"
 
-RUN REPOLIST="codeready-builder-for-rhel-8-x86_64-rpms" \
-    PKGLIST="boost libconfig lksctp-tools protobuf-c iproute iputils procps-ng bind-utils" \
-    # && yum -y upgrade-minimal --setopt=tsflags=nodocs --security --sec-severity=Critical --sec-severity=Important && \
-    && yum -y install --enablerepo ${REPOLIST} --setopt=tsflag=nodocs ${PKGLIST} \
-    && yum -y install http://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/x/xforms-1.2.4-5.el7.x86_64.rpm \
-    && yum -y clean all \
-    && rm -rf /var/cache/yum
+RUN apt-get update && apt-get install -y \
+       iproute \
+	   iputils-arping \
+	   iputils-ping \
+	   iputils-tracepath \
+	   bind9-dnsutils \
+       libboost-all-dev \
+       libconfig-dev \
+       lksctp-tools \
+       libprotobuf-c1 \
+       libforms-bin \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* 
 
 ENV APP_ROOT=/opt/oai-enb
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}

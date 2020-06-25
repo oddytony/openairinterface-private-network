@@ -1,5 +1,5 @@
 ARG REGISTRY=localhost
-FROM $REGISTRY/baseimage AS builder
+FROM $REGISTRY/oai-build-base AS builder
 
 ARG GIT_TAG=develop-vco3
 
@@ -17,7 +17,7 @@ RUN cd openair-cn/scripts \
     && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_mme -c -v -b Debug
 
 
-FROM registry.redhat.io/ubi8/ubi
+FROM ubuntu:bionic
 LABEL name="oai-mme" \
       version="$GIT_TAG" \
       maintainer="Ighagbon Anthony O <signormca@yahoo.com>" \
@@ -25,11 +25,18 @@ LABEL name="oai-mme" \
       io.openshift.tags="oai,mme" \
       io.openshift.non-scalable="true"
 
-RUN REPOLIST=codeready-builder-for-rhel-8-x86_64-rpms \
-    PKGLIST="libconfig libasan libidn lksctp-tools iproute iputils procps-ng bind-utils" && \
-    # yum -y upgrade-minimal --setopt=tsflags=nodocs --security --sec-severity=Critical --sec-severity=Important && \
-    yum -y install --enablerepo ${REPOLIST} --setopt=tsflag=nodocs ${PKGLIST} && \
-    yum -y clean all
+RUN apt-get update && apt-get install -y \
+    libconfig-dev \
+	libidn2-dev \
+	libasan2 \
+    lksctp-tools \
+	iproute \
+	iputils-arping \
+	iputils-ping \
+	iputils-tracepath \
+	bind9-dnsutils \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* 
 
 ENV APP_ROOT=/opt/oai-mme
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}

@@ -1,5 +1,5 @@
 ARG REGISTRY=localhost
-FROM $REGISTRY/baseimage AS builder
+FROM $REGISTRY/oai-build-base AS builder
 
 ARG GIT_TAG=develop-vco3
 
@@ -13,7 +13,7 @@ RUN cd openair-cn-cups/build/scripts \
     && ./build_spgwc -c -v -b RelWithDebInfo -j
 
 
-FROM registry.redhat.io/ubi8/ubi
+FROM ubuntu:bionic
 LABEL name="oai-spgwc" \
       version="$GIT_TAG" \
       maintainer="Ighagbon Anthony <signormca@yahoo.com>" \
@@ -21,11 +21,20 @@ LABEL name="oai-spgwc" \
       io.openshift.tags="oai,spgwc" \
       io.openshift.non-scalable="true"
 
-RUN REPOLIST=codeready-builder-for-rhel-8-x86_64-rpms \
-    PKGLIST="boost libasan libconfig libevent gflags-devel glog-devel iproute iputils procps-ng bind-utils" && \
-    # yum -y update-minimal --setopt=tsflags=nodocs --security --sec-severity=Important --sec-severity=Critical && \
-    yum -y install --enablerepo ${REPOLIST} --setopt=tsflag=nodocs ${PKGLIST} && \
-    yum -y clean all
+RUN apt-get update && apt-get install -y \
+    libboost-all-dev \
+	libasan2 \
+	libconfig-dev \
+	libevent-dev \
+    libgflags-dev \
+	libgoogle-glog-dev \
+	iproute \
+	iputils-arping \
+	iputils-ping \
+	iputils-tracepath \
+	bind9-dnsutils \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* 
 
 ENV APP_ROOT=/opt/oai-spgwc
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
