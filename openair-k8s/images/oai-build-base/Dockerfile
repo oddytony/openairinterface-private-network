@@ -75,7 +75,7 @@ RUN apt-get update && apt-get install -y \
 		libuhd003.010.003\
 		uhd-host \
 		libuv0.10 \
-		libuv0.10-dev
+		libuv0.10-dev \
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --user mako pexpect
