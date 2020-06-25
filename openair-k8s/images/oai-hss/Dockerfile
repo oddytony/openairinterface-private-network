@@ -1,5 +1,5 @@
 ARG REGISTRY=localhost
-FROM $REGISTRY/oai-build-base:latest.el8 AS builder
+FROM $REGISTRY/baseimage AS builder
 
 ARG GIT_TAG=develop-vco3
 

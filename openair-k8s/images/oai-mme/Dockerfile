@@ -1,5 +1,5 @@
 ARG REGISTRY=localhost
-FROM $REGISTRY/oai-build-base:latest.el8 AS builder
+FROM $REGISTRY/baseimage AS builder
 
 ARG GIT_TAG=develop-vco3
 
@@ -20,7 +20,7 @@ RUN cd openair-cn/scripts \
 FROM registry.redhat.io/ubi8/ubi
 LABEL name="oai-mme" \
       version="$GIT_TAG" \
-      maintainer="Frank A. Zdarsky <fzdarsky@redhat.com>" \
+      maintainer="Ighagbon Anthony O <signormca@yahoo.com>" \
       io.k8s.description="openair-cn MME $GIT_TAG." \
       io.openshift.tags="oai,mme" \
       io.openshift.non-scalable="true"
