@@ -44,7 +44,7 @@ RUN apt-get update && apt-get install -y \
         libyaml-dev \
         lksctp-tools \
         libsctp-dev \
-        liblz4-dev 
+        liblz4-dev \
 		libsnappy-dev \
 		libjemalloc-dev \
 		libunwind-dev \
