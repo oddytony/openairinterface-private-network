@@ -62,6 +62,9 @@ RUN apt-get update && apt-get install -y \
         zlib1g-dev \
         libforms-dev \
         libforms-bin \
+		libuhd-dev \
+		libuhd003 \
+		uhd-host \
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --user mako pexpect
