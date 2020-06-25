@@ -49,15 +49,6 @@ function build_install_liblfds {
     make so_install
 }
 
-function build_install_double-conversion {
-    rm -rf /tmp/double-conversion
-    git clone --depth=1 --branch=v3.1.5 https://github.com/google/double-conversion.git /tmp/double-conversion
-    cd /tmp/double-conversion
-    cmake .
-    make -j`nproc`
-    make install
-}
-
 function build_install_folly {
     rm -rf /tmp/folly
     git clone --depth=1 --branch=v2019.06.17.00 https://github.com/facebook/folly.git /tmp/folly
@@ -71,21 +62,8 @@ function build_install_folly {
     make install
 }
 
-function build_install_libuv {
-    rm -rf /tmp/libuv
-    git clone --depth=1 --branch=v1.23.1 https://github.com/libuv/libuv.git /tmp/libuv
-    cd /tmp/libuv
-    mkdir -p build
-    cd build
-    cmake ..
-    make -j`nproc`
-    make install
-}
-
 build_install_asn1c_oai
 build_install_asn1c_cn
 build_install_freediameter
 build_install_liblfds
-build_install_double-conversion
 build_install_folly
-build_install_libuv

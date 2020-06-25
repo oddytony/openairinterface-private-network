@@ -16,12 +16,15 @@ RUN apt-get update && apt-get install -y \
         libblas-dev \
 		liblapack3 \
 		liblapack-dev \
+		libboost-all-dev \
         libboost-dev \
         libbz2-dev \
         check \
         libelf-dev \
         libgflags-dev \
+		libdouble-conversion-dev \
         libgoogle-glog-dev \
+		libiberty-dev \
         libgmp-dev \
         libgnutls28-dev \
         guile-2.2-dev \
@@ -41,9 +44,13 @@ RUN apt-get update && apt-get install -y \
         libyaml-dev \
         lksctp-tools \
         libsctp-dev \
-        liblz4-dev \
+        liblz4-dev 
+		libsnappy-dev \
+		libjemalloc-dev \
+		libunwind-dev \
         libmariadbclient-dev \
         nettle-dev \
+		binutils-dev \
         openssh-client \
         openssh-server \
         openssl \
@@ -67,6 +74,8 @@ RUN apt-get update && apt-get install -y \
 		libuhd-dev \
 		libuhd003.010.003\
 		uhd-host \
+		libuv0.10 \
+		libuv0.10-dev
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --user mako pexpect
