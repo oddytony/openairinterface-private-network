@@ -7,7 +7,7 @@ LABEL name="oai-build-base" \
       io.k8s.description="Ubuntu base Image containing all build dependencies for openairinterface5g and openair-cn."
 
 WORKDIR /root
-RUN apt update && apt install -y \
+RUN apt-get update && apt-get install -y \
         git make cmake gcc g++ autoconf automake bc bison flex libtool patch \
         libatlas-base-dev \
         libblas3 \
@@ -15,14 +15,14 @@ RUN apt update && apt install -y \
 		liblapack3 \
 		liblapack-dev \
         libboost-dev \
-        libbzip2-dev \
+        libbz2-dev \
         check \
         libelf-dev \
         libgflags-dev \
         libgoogle-glog-dev \
         libgmp-dev \
-        libgnutls-dev \
-        libguile-dev \
+        libgnutls28-dev \
+        guile-2.2-dev \
         linux-headers-generic \
         libasan2 \
         libconfig-dev \
@@ -47,21 +47,20 @@ RUN apt update && apt install -y \
         openssl \
         libssl-dev \
         pkg-config \
-        protobuf \
-        protobuf-c \
+        libprotobuf-dev \
+        libprotobuf-c1 \
         protobuf-c-compiler \
         libprotobuf-c-dev \
         psmisc \
-        python2 \
-        python2-docutils \
-        python2-requests \
+        python \
+		python-dev \
+        python-docutils \
+        python-requests \
         vim-common \
         liblzma-dev \
         zlib1g-dev \
         libforms-dev \
         libforms-bin \
-		asn1c \
-		
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && pip2 install --user mako pexpect
