@@ -54,6 +54,7 @@ RUN apt-get update && apt-get install -y \
         psmisc \
         python \
 		python-dev \
+		python-pip \
         python-docutils \
         python-requests \
         vim-common \
@@ -63,7 +64,7 @@ RUN apt-get update && apt-get install -y \
         libforms-bin \
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && pip2 install --user mako pexpect
+    && pip install --user mako pexpect
 
 RUN if [ "$EURECOM_PROXY" == true ]; then git config --global http.proxy http://:@proxy.eurecom.fr:8080; fi
 
