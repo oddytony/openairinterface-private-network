@@ -1,5 +1,5 @@
 ARG REGISTRY=localhost
-FROM $REGISTRY/oai-build-base:latest.el8 AS builder
+FROM $REGISTRY/baseimage AS builder
 
 ARG GIT_TAG=develop-vco3
 
@@ -15,7 +15,7 @@ RUN cd openair-cn-cups/build/scripts \
 FROM registry.redhat.io/ubi8/ubi
 LABEL name="oai-spgwu" \
       version="$GIT_TAG" \
-      maintainer="Frank A. Zdarsky <fzdarsky@redhat.com>" \
+      maintainer="Ighagbon Anthony <signormca@yahoo.com>" \
       io.k8s.description="openair-cn-cups S/P-GW-U $GIT_TAG" \
       io.openshift.tags="oai,spgwu" \
       io.openshift.non-scalable="true"
