@@ -2,6 +2,8 @@
 FROM ubuntu:bionic
 
 ARG GIT_TAG=latest
+ARG DEBIAN_FRONTEND=noninteractive
+
 LABEL name="oai-build-base" \
       version="${GIT_TAG}" \
       io.k8s.description="Ubuntu base Image containing all build dependencies for openairinterface5g and openair-cn."
