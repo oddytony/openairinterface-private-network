@@ -1,5 +1,14 @@
+From 7a950bea554ec2068b42dd240cfe51dff09a9fc3 Mon Sep 17 00:00:00 2001
+From: manexwayo <wayomanasseh@gmail.com>
+Date: Sun, 28 Jun 2020 19:10:49 +0100
+Subject: [PATCH 2/2] disable sched fifo fail exits
+
+---
+ targets/RT/USER/rt_wrapper.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/targets/RT/USER/rt_wrapper.c b/targets/RT/USER/rt_wrapper.c
-index b55bafed1..5231ce921 100644
+index b55bafe..29bdc18 100644
 --- a/targets/RT/USER/rt_wrapper.c
 +++ b/targets/RT/USER/rt_wrapper.c
 @@ -338,13 +338,13 @@ void thread_top_init(char *thread_name,
@@ -7,14 +16,17 @@ index b55bafed1..5231ce921 100644
    if (s != 0) {
      perror("pthread_setschedparam : ");
 -    exit_fun("Error setting thread priority");
-+    // exit_fun("Error setting thread priority");
++    //exit_fun("Error setting thread priority");
    }
    
    s = pthread_getschedparam(pthread_self(), &policy, &sparam);
    if (s != 0) {
      perror("pthread_getschedparam : ");
 -    exit_fun("Error getting thread priority");
-+    // exit_fun("Error getting thread priority");
++    //exit_fun("Error getting thread priority");
    }
  
    pthread_setname_np(pthread_self(), thread_name);
+-- 
+2.25.1.windows.1
+
