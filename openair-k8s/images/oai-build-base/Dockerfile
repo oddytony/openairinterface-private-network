@@ -11,8 +11,7 @@ LABEL name="oai-build-base" \
 WORKDIR /root
 RUN apt-get update && apt-get install -y \
         git make cmake gcc g++ autoconf automake bc bison build-essential \
-		dialog flex gawk libtool ethtool iperf iproute iptables iptables-dev patch sshfs \
-		libblas3gf \
+		dialog flex gawk libtool patch sshfs \
         libatlas-base-dev \
         libblas3 \
         libblas-dev \
@@ -29,7 +28,6 @@ RUN apt-get update && apt-get install -y \
 		libiberty-dev \
         libgmp-dev \
 		libpgm-dev \
-		libpgm-5.1-0 \
         libgnutls28-dev \
         guile-2.2-dev \
         linux-headers-generic \
@@ -52,7 +50,6 @@ RUN apt-get update && apt-get install -y \
 		libpthread-stubs0-dev \
 		libsctp1 \
         libsctp-dev \
-		libtasn1-3-dev \
         liblz4-dev \
 		libsnappy-dev \
 		libjemalloc-dev \
