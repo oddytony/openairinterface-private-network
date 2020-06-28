@@ -1,5 +1,4 @@
-ARG REGISTRY=localhost
-FROM $REGISTRY/oai-build-base AS builder
+FROM oai-build-base AS builder
 
 ARG GIT_TAG=v1.1.1
 
@@ -27,6 +26,7 @@ LABEL name="oai-ue" \
 RUN apt-get update && apt-get install -y \
     libatlas-base-dev \
     libblas3 \
+	libblas3gf \
     liblapack3 \
 	libboost-all-dev \
 	libconfig-dev \

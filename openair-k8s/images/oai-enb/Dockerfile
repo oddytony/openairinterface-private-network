@@ -1,5 +1,4 @@
-ARG REGISTRY=localhost
-FROM $REGISTRY/oai-build-base AS builder
+FROM oai-build-base AS builder
 
 ARG GIT_TAG=v1.1.1
 
