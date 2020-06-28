@@ -10,7 +10,8 @@ LABEL name="oai-build-base" \
 
 WORKDIR /root
 RUN apt-get update && apt-get install -y \
-        git make cmake gcc g++ autoconf automake bc bison flex libtool patch \
+        git make cmake gcc g++ autoconf automake bc bison build-essential \
+		dialog flex gawk libtool patch sshfs \
         libatlas-base-dev \
         libblas3 \
         libblas-dev \
@@ -26,6 +27,7 @@ RUN apt-get update && apt-get install -y \
         libgoogle-glog-dev \
 		libiberty-dev \
         libgmp-dev \
+		libpgm-dev \
         libgnutls28-dev \
         guile-2.2-dev \
         linux-headers-generic \
@@ -34,8 +36,10 @@ RUN apt-get update && apt-get install -y \
         libevent-dev \
         libffi-dev \
         libgcrypt-dev \
+		libgcrypt11-dev \
         libidn11-dev \
         libidn2-dev  \
+		libidn2-0-dev \
         libtool \
         libusb-dev \
         libxml2-dev \
@@ -43,6 +47,8 @@ RUN apt-get update && apt-get install -y \
         libxslt-dev \
         libyaml-dev \
         lksctp-tools \
+		libpthread-stubs0-dev \
+		libsctp1 \
         libsctp-dev \
         liblz4-dev \
 		libsnappy-dev \
@@ -71,9 +77,9 @@ RUN apt-get update && apt-get install -y \
         zlib1g-dev \
         libforms-dev \
         libforms-bin \
+		libgtk-3-dev \
+		gtkwave \
 		libuhd-dev \
-		libuhd003.010.003\
-		uhd-host \
 		libuv0.10 \
 		libuv0.10-dev \
 	&& apt-get clean \

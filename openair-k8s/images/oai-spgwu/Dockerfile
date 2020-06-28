@@ -1,5 +1,4 @@
-ARG REGISTRY=localhost
-FROM $REGISTRY/baseimage AS builder
+FROM oai-build-base AS builder
 
 ARG GIT_TAG=develop-vco3
 
@@ -12,7 +11,7 @@ RUN patch -p1 -d openair-cn-cups < patches/enable_sudo-less_build.patch
 RUN cd openair-cn-cups/build/scripts \
     && ./build_spgwu -c -v -b RelWithDebInfo -j
 
-FROM registry.redhat.io/ubi8/ubi
+FROM ubuntu:bionic
 LABEL name="oai-spgwu" \
       version="$GIT_TAG" \
       maintainer="Ighagbon Anthony <signormca@yahoo.com>" \
@@ -20,11 +19,21 @@ LABEL name="oai-spgwu" \
       io.openshift.tags="oai,spgwu" \
       io.openshift.non-scalable="true"
 
-RUN REPOLIST=codeready-builder-for-rhel-8-x86_64-rpms \
-    PKGLIST="boost libasan libconfig libevent gflags-devel glog-devel iproute iputils iptables procps-ng bind-utils" && \
-    # yum -y update-minimal --setopt=tsflags=nodocs --security --sec-severity=Important --sec-severity=Critical && \
-    yum -y install --enablerepo ${REPOLIST} --setopt=tsflag=nodocs ${PKGLIST} && \
-    yum -y clean all
+RUN apt-get update && apt-get install -y \
+    libboost-all-dev \
+	libasan2 \
+	libconfig-dev \
+	libevent-dev \
+    libgflags-dev \
+	libgoogle-glog-dev \
+	iproute \
+	iptables \
+	iputils-arping \
+	iputils-ping \
+	iputils-tracepath \
+	bind9-dnsutils \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* 
 
 ENV APP_ROOT=/opt/oai-spgwu
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}

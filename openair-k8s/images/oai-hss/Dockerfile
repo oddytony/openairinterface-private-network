@@ -1,5 +1,5 @@
-ARG REGISTRY=localhost
-FROM $REGISTRY/baseimage AS builder
+
+FROM oai-build-base AS builder
 
 ARG GIT_TAG=develop-vco3
 
@@ -18,20 +18,28 @@ RUN cd openair-cn/scripts \
     && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_hss_rel14 -v
 
 
-FROM registry.redhat.io/ubi8/ubi
+FROM ubuntu:bionic
 LABEL name="oai-hss" \
       version="$GIT_TAG" \
-      maintainer="Frank A. Zdarsky <fzdarsky@redhat.com>" \
+      maintainer="Ighagbon Anthony <signormca@yahoo.com>" \
       io.k8s.description="openair-cn HSS $GIT_TAG." \
       io.openshift.tags="oai,hss" \
       io.openshift.non-scalable="true" \
       io.openshift.wants="mariadb"
 
-RUN REPOLIST=codeready-builder-for-rhel-8-x86_64-rpms \
-    PKGLIST="libconfig libidn mariadb-devel lksctp-tools mysql iproute iputils procps-ng bind-utils" && \
-    # yum -y upgrade-minimal --setopt=tsflags=nodocs --security --sec-severity=Critical --sec-severity=Important && \
-    yum -y install --enablerepo ${REPOLIST} --setopt=tsflag=nodocs ${PKGLIST} && \
-    yum -y clean all
+RUN apt-get update && apt-get install -y 
+    libconfig-dev \
+	libidn2-dev \
+	libmariadbclient-dev \
+    lksctp-tools \
+	mysql-client \
+	iproute \
+	iputils-arping \
+	iputils-ping \
+	iputils-tracepath \
+	bind9-dnsutils \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* 
 
 ENV APP_ROOT=/opt/oai-hss
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}

@@ -1,5 +1,4 @@
-ARG REGISTRY=localhost
-FROM $REGISTRY/baseimage AS builder
+FROM oai-build-base AS builder
 
 ARG GIT_TAG=v1.1.1
 
@@ -16,7 +15,7 @@ RUN cd openairinterface5g/cmake_targets \
     && ./build_oai -c --UE -w USRP --verbose-compile
 
 
-FROM registry.redhat.io/ubi8/ubi
+FROM ubuntu:bionic
 LABEL name="oai-ue" \
       version="$GIT_TAG" \
       maintainer="Ighagbon Anthony <signormca@yahoo.com" \
@@ -24,14 +23,25 @@ LABEL name="oai-ue" \
       io.openshift.tags="oai,ue" \
       io.openshift.non-scalable="true"
 
-RUN REPOLIST="codeready-builder-for-rhel-8-x86_64-rpms" \
-    && PKGLIST="atlas blas boost lapack libconfig lksctp-tools protobuf-c iproute iputils procps-ng bind-utils" \
-    # && yum -y upgrade-minimal --setopt=tsflags=nodocs --security --sec-severity=Critical --sec-severity=Important \
-    && yum -y install --enablerepo ${REPOLIST} --setopt=tsflag=nodocs ${PKGLIST} \
-    && yum install -y http://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/x/xforms-1.2.4-5.el7.x86_64.rpm \
-    && yum -y clean all \
-    && rm -rf /var/cache/yum
-
+RUN apt-get update && apt-get install -y \
+    libatlas-base-dev \
+    libblas3 \
+	libblas3gf \
+    liblapack3 \
+	libboost-all-dev \
+	libconfig-dev \
+    lksctp-tools \
+    libprotobuf-c1 \
+    libforms-bin \
+	lksctp-tools \
+	iproute \
+	iputils-arping \
+	iputils-ping \
+	iputils-tracepath \
+	bind9-dnsutils \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* 
+ 
 ENV APP_ROOT=/opt/oai-ue
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 COPY --from=builder /root/openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${APP_ROOT}/bin/
