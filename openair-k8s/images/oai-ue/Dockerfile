@@ -7,8 +7,9 @@ WORKDIR /root
 RUN if [ "$EURECOM_PROXY" == true ]; then git config --global http.proxy http://:@proxy.eurecom.fr:8080; fi
 RUN git clone --depth=1 --branch=$GIT_TAG https://gitlab.eurecom.fr/oai/openairinterface5g.git
 COPY patches patches/
-RUN patch -p1 -d openairinterface5g < patches/disable_building_nasmesh_and_rbtool.patch \
-    && patch -p1 -d openairinterface5g < patches/0003-remove-unfound-library.patch \ 
+RUN patch -p1 -d openairinterface5g < patches/disable_building_nasmesh_and_rbtool.patch \ 
+    && patch -p1 -d openairinterface5g < patches/0003-remove-unfound-library.patch 
+
 RUN cd openairinterface5g/cmake_targets \
     && ln -sf /usr/local/bin/asn1c_oai /usr/local/bin/asn1c \
     && ln -sf /usr/local/share/asn1c_oai /usr/local/share/asn1c \
