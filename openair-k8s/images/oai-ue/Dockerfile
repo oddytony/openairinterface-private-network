@@ -1,6 +1,6 @@
 FROM oai-build-base AS builder
 
-#ARG GIT_TAG=master
+ARG GIT_TAG=master
 
 WORKDIR /root
 
