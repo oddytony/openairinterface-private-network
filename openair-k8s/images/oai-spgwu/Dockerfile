@@ -8,7 +8,8 @@ RUN git clone --depth=1 --branch=$GIT_TAG https://github.com/OPENAIRINTERFACE/op
 RUN git clone --depth=1 --branch=master https://github.com/gabime/spdlog.git openair-cn-cups/build/ext/spdlog
 COPY patches patches/
 RUN patch -p1 -d openair-cn-cups < patches/0001-enable-sudoless-build.patch
-RUN cd openair-cn-cups/build/scripts \
+RUN apt-get update && apt-get install -y libconfig++-dev libasio-dev \
+    && cd openair-cn-cups/build/scripts \
     && ./build_spgwu -c -v -b RelWithDebInfo -j
 
 FROM ubuntu:bionic
