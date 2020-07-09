@@ -35,20 +35,20 @@ RUN apt-get update && apt-get install -y \
     libprotobuf-c1 \
     libforms-bin \
 	lksctp-tools \
-	iproute \
+	iproute2 \
 	iputils-arping \
 	iputils-ping \
 	iputils-tracepath \
-	bind9-dnsutils \
+	bind9 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* 
  
 ENV APP_ROOT=/opt/oai-ue
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 COPY --from=builder /root/openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${APP_ROOT}/bin/
-COPY --from=builder /root/openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /lib64
+COPY --from=builder /root/openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /lib64/
 COPY --from=builder /usr/local/lib64 /lib64
-COPY --from=builder /usr/local/bin/uhd_* /usr/local/bin
+COPY --from=builder /usr/local/bin/uhd_* /usr/local/bin/
 COPY --from=builder /usr/local/share/uhd /usr/local/share/uhd
 RUN cd /lib64 \
     && ln -sf liboai_eth_transpro.so liboai_transpro.so \
