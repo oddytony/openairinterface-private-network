@@ -1,14 +1,15 @@
 FROM oai-build-base AS builder
 
-ARG GIT_TAG=develop-vco3
+ARG GIT_TAG=master
 
 WORKDIR /root
 
 RUN git clone --depth=1 --branch=$GIT_TAG https://github.com/OPENAIRINTERFACE/openair-cn-cups.git
 RUN git clone --depth=1 --branch=master https://github.com/gabime/spdlog.git openair-cn-cups/build/ext/spdlog
 COPY patches patches/
-RUN patch -p1 -d openair-cn-cups < patches/enable_sudo-less_build.patch
-RUN cd openair-cn-cups/build/scripts \
+RUN patch -p1 -d openair-cn-cups < patches/0001-enable-sudoless-build.patch
+RUN apt-get update && apt-get install -y libconfig++-dev libasio-dev \
+    && cd openair-cn-cups/build/scripts \
     && ./build_spgwu -c -v -b RelWithDebInfo -j
 
 FROM ubuntu:bionic
@@ -26,12 +27,12 @@ RUN apt-get update && apt-get install -y \
 	libevent-dev \
     libgflags-dev \
 	libgoogle-glog-dev \
-	iproute \
+	iproute2 \
 	iptables \
 	iputils-arping \
 	iputils-ping \
 	iputils-tracepath \
-	bind9-dnsutils \
+	bind9 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* 
 
