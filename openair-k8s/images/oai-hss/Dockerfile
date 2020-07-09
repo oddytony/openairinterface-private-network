@@ -7,6 +7,8 @@ WORKDIR /root
 
 RUN git clone --depth=1 --branch=$GIT_TAG https://github.com/OPENAIRINTERFACE/openair-cn.git
 
+RUN patch -p1 -d openair-cn < patches/0001-enable-sudoless-build.patch
+
 RUN cd openair-cn/scripts \
     && ln -sf /usr/local/bin/asn1c_cn /usr/local/bin/asn1c \
     && ln -sf /usr/local/share/asn1c_cn /usr/local/share/asn1c \
@@ -24,17 +26,17 @@ LABEL name="oai-hss" \
       io.openshift.non-scalable="true" \
       io.openshift.wants="mariadb"
 
-RUN apt-get update && apt-get install -y 
+RUN apt-get update && apt-get install -y \
     libconfig-dev \
 	libidn2-dev \
 	libmariadbclient-dev \
     lksctp-tools \
 	mysql-client \
-	iproute \
+	iproute2 \
 	iputils-arping \
 	iputils-ping \
 	iputils-tracepath \
-	bind9-dnsutils \
+	bind9 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* 
 
