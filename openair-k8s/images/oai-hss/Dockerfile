@@ -1,15 +1,15 @@
 
 FROM oai-build-base AS builder
 
-ARG GIT_TAG=develop-vco3
+ARG GIT_TAG=master
 
 WORKDIR /root
 
 RUN git clone --depth=1 --branch=$GIT_TAG https://github.com/OPENAIRINTERFACE/openair-cn.git
+
 COPY patches patches/
-RUN patch -p1 -d openair-cn < patches/enable_sudo-less_build.patch \
-    && patch -p1 -d openair-cn < patches/disable_distro_check_and_rpm_install.patch \
-    && patch -p1 -d openair-cn < patches/fix_libpistache_lib_path.patch
+RUN patch -p1 -d openair-cn < patches/0001-enable-sudoless-build.patch
+
 RUN cd openair-cn/scripts \
     && ln -sf /usr/local/bin/asn1c_cn /usr/local/bin/asn1c \
     && ln -sf /usr/local/share/asn1c_cn /usr/local/share/asn1c \
@@ -27,17 +27,22 @@ LABEL name="oai-hss" \
       io.openshift.non-scalable="true" \
       io.openshift.wants="mariadb"
 
-RUN apt-get update && apt-get install -y 
+RUN apt-get update && apt-get install -y \
     libconfig-dev \
 	libidn2-dev \
 	libmariadbclient-dev \
     lksctp-tools \
 	mysql-client \
-	iproute \
+	iproute2 \
 	iputils-arping \
 	iputils-ping \
 	iputils-tracepath \
-	bind9-dnsutils \
+	bind9 \
+        python-cassandra \
+        python3-cassandra \
+        python-blist \
+        python3-blist \
+
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* 
 
@@ -45,10 +50,9 @@ ENV APP_ROOT=/opt/oai-hss
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 
 COPY --from=builder /root/openair-cn/build/hss_rel14/bin/hss ${APP_ROOT}/bin/oai_hss
-COPY --from=builder /usr/local/lib/libfd* /lib64
+COPY --from=builder /usr/local/lib/libfd* /lib64/
 COPY --from=builder /usr/local/lib/freeDiameter/* /usr/local/lib/freeDiameter/
-COPY --from=builder /usr/local/lib64/libcassandra* /lib64
-COPY --from=builder /usr/local/lib64/libuv.so /lib64
+#COPY --from=builder /usr/local/lib64/libuv.so /lib64
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
 RUN chmod -R u+x ${APP_ROOT} && \
