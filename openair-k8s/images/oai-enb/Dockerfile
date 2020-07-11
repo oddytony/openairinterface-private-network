@@ -9,8 +9,7 @@ RUN if [ "$EURECOM_PROXY" == true ]; then git config --global http.proxy http://
 RUN git clone --depth=1 https://gitlab.eurecom.fr/oai/openairinterface5g.git
 COPY patches patches/
 RUN patch -p1 -d openairinterface5g < patches/0001-disable-nasmesh-and-rbtool-build.patch \
-    && patch -p1 -d openairinterface5g < patches/0002-disable-sched-fifo-fail-exits.patch \
-	&& patch -p1 -d openairinterface5g < patches/0003-remove-unfound-library.patch 
+    && patch -p1 -d openairinterface5g < patches/0002-disable-sched-fifo-fail-exits.patch \ 
 RUN cd openairinterface5g/cmake_targets \
     && ln -sf /usr/local/bin/asn1c_oai /usr/local/bin/asn1c \
     && ln -sf /usr/local/share/asn1c_oai /usr/local/share/asn1c \
@@ -27,10 +26,10 @@ LABEL name="oai-enb" \
 
 RUN apt-get update && apt-get install -y \
        iproute2 \
-	   iputils-arping \
-	   iputils-ping \
-	   iputils-tracepath \
-	   bind9 \
+       iputils-arping \
+       iputils-ping \
+       iputils-tracepath \
+       bind9 \
        libboost-all-dev \
        libconfig-dev \
        lksctp-tools \
