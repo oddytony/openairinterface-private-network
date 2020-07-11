@@ -7,10 +7,11 @@ WORKDIR /root
 RUN if [ "$EURECOM_PROXY" == true ]; then git config --global http.proxy http://:@proxy.eurecom.fr:8080; fi
 RUN git clone --depth=1 --branch=$GIT_TAG https://gitlab.eurecom.fr/oai/openairinterface5g.git
 COPY patches patches/
-RUN patch -p1 -d openairinterface5g < patches/disable_building_nasmesh_and_rbtool.patch \ 
-    && patch -p1 -d openairinterface5g < patches/0003-remove-unfound-library.patch 
+RUN patch -p1 -d openairinterface5g < patches/disable_building_nasmesh_and_rbtool.patch 
 
-RUN cd openairinterface5g/cmake_targets \
+RUN apt-get update && apt-get install -y 
+liblapacke-dev linux-headers-5.3.0-1029-gcp \
+    && cd openairinterface5g/cmake_targets \
     && ln -sf /usr/local/bin/asn1c_oai /usr/local/bin/asn1c \
     && ln -sf /usr/local/share/asn1c_oai /usr/local/share/asn1c \
     && ./build_oai -c --UE -w USRP --verbose-compile
@@ -27,19 +28,18 @@ LABEL name="oai-ue" \
 RUN apt-get update && apt-get install -y \
     libatlas-base-dev \
     libblas3 \
-	libblas3gf \
     liblapack3 \
-	libboost-all-dev \
-	libconfig-dev \
+    libboost-all-dev \
+    libconfig-dev \
     lksctp-tools \
     libprotobuf-c1 \
     libforms-bin \
-	lksctp-tools \
-	iproute2 \
-	iputils-arping \
-	iputils-ping \
-	iputils-tracepath \
-	bind9 \
+    lksctp-tools \
+    iproute2 \
+    iputils-arping \
+    iputils-ping \
+    iputils-tracepath \
+    bind9 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* 
  

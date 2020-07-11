@@ -11,35 +11,38 @@ LABEL name="oai-build-base" \
 WORKDIR /root
 RUN apt-get update && apt-get install -y \
         git make cmake gcc g++ autoconf automake bc bison build-essential \
-		dialog flex gawk libtool patch sshfs \
+	dialog flex gawk libtool patch sshfs \
         libatlas-base-dev \
         libblas3 \
         libblas-dev \
-		liblapack3 \
-		liblapack-dev \
-		libboost-all-dev \
+	liblapack3 \
+	liblapack-dev \
+        liblapacke-dev \
+	libboost-all-dev \
         libboost-dev \
         libbz2-dev \
         check \
         libelf-dev \
         libgflags-dev \
-		libdouble-conversion-dev \
+	libdouble-conversion-dev \
         libgoogle-glog-dev \
-		libiberty-dev \
+	libiberty-dev \
         libgmp-dev \
-		libpgm-dev \
+	libpgm-dev \
         libgnutls28-dev \
         guile-2.2-dev \
-        linux-headers-generic \
+        linux-headers-5.3.0-1029-gcp \
         libasan2 \
         libconfig-dev \
+        libconfig++-dev \
+        libasio-dev \
         libevent-dev \
         libffi-dev \
         libgcrypt-dev \
-		libgcrypt11-dev \
+	libgcrypt11-dev \
         libidn11-dev \
         libidn2-dev  \
-		libidn2-0-dev \
+	libidn2-0-dev \
         libtool \
         libusb-dev \
         libxml2-dev \
@@ -47,16 +50,16 @@ RUN apt-get update && apt-get install -y \
         libxslt-dev \
         libyaml-dev \
         lksctp-tools \
-		libpthread-stubs0-dev \
-		libsctp1 \
+	libpthread-stubs0-dev \
+	libsctp1 \
         libsctp-dev \
         liblz4-dev \
-		libsnappy-dev \
-		libjemalloc-dev \
-		libunwind-dev \
+	libsnappy-dev \
+	libjemalloc-dev \
+	libunwind-dev \
         libmariadbclient-dev \
         nettle-dev \
-		binutils-dev \
+	binutils-dev \
         openssh-client \
         openssh-server \
         openssl \
@@ -68,8 +71,8 @@ RUN apt-get update && apt-get install -y \
         libprotobuf-c-dev \
         psmisc \
         python \
-		python-dev \
-		python-pip \
+	python-dev \
+	python-pip \
         python-docutils \
         python-requests \
         vim-common \
@@ -77,11 +80,11 @@ RUN apt-get update && apt-get install -y \
         zlib1g-dev \
         libforms-dev \
         libforms-bin \
-		libgtk-3-dev \
-		gtkwave \
-		libuhd-dev \
-		libuv0.10 \
-		libuv0.10-dev \
+	libgtk-3-dev \
+	gtkwave \
+	libuhd-dev \
+	libuv0.10 \
+	libuv0.10-dev \
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --user mako pexpect
