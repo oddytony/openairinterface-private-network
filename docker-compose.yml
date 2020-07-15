@@ -1,0 +1,291 @@
+version: '3.4'
+
+services:
+  oai-hss:
+    build:
+      context: ./images/oai-hss/
+      dockerfile: ./images/oai-hss/Dockerfile
+    image: oai-hss
+    depends_on:
+      - oai-cassandra
+    environment:
+      - HOSTNAME = "localhost"
+      - DB_FQDN = "oai-cassandra"
+      - DB_NAME = "vhss"
+      - DB_USER = "cassandra"
+      - DB_PASSWORD = "cassandra"
+      - OP_KEY = "11111111111111111111111111111111"
+      - HSS_FQDN = "oai-hss"
+      - ROAMING_ALLOWED = "true"
+    volumes:
+      - .config/hss/certs:/opt/oai-hss/certs
+    ports:
+      - "3868:3868"
+      - "5868:5868"
+      - "9080:9080"
+      - "9081:9081"
+   hostname: oai-hss.local.net
+   networks:
+      hss-net1:
+        ipv4_address: 192.168.1.102
+
+  oai-mme:
+    build:
+      context: ./images/oai-mme/
+      dockerfile: ./images/oai-mme/Dockerfile
+    image: oai-mme
+    depends_on:
+      - oai-hss
+    environment:
+      - MME_SERVICE= "oai-mme"
+      - MME_REALM = "local.net"
+      - MME_GID = "4"
+      - MME_CODE = "1"
+      - NW_IF_S1C = "net1"
+      - NW_IF_S11 = "net2"
+      - NW_IF_S10 = "lo"
+      - MCC = "208"
+      - MNC = "96"
+      - TAC = "1"
+      - MME_CIDR_S1C = "192.168.1.100/24"
+      - MME_CIDR_S11 = "172.16.1.100/24" 
+      - MME_CIDR_S10 = "127.0.0.1/32"
+      - SGW_CIDR_S11 = "172.16.1.101/24"
+      - HSS_SERVICE = "oai-hss.local.net"
+      - HSS_REALM = "local.net"
+      - HSS_HOSTNAME = "oai-hss"
+      - HSS_IP = "oai-hss.local.net" 
+    volumes:
+      - .config/mme/certs:/opt/oai-mme/certs
+    ports:
+      - "3870:3870"
+      - "5870:5870"
+      - "2123:2123"
+    hostname: oai-mme.local.net
+    networks:
+      mme-net1:
+        ipv4_address: 192.168.1.100
+      mme-net2:
+        ipv4_address: 172.16.1.100
+      
+  oai-spgwc:
+    build:
+      context: ./images/oai-spgwc/
+      dockerfile: ./images/oai-spgwc/Dockerfile
+    image: oai-spgwc
+    environment:
+      - PGW_SX_INTERFACE = "net1"
+      - SGW_S11_INTERFACE = "net2"
+      - UE_IP_ADDRESS_POOL = "192.168.20.2-192.168.20.200"
+      - UE_DNS_SERVER = "192.168.18.129"
+    ports:
+      - "8805:8805"
+      - "2123:2123"
+    networks:
+      spgwc-net1:
+        ipv4_address: 192.168.2.100
+      spgwc-net2:
+        ipv4_address: 172.16.1.101
+      
+  oai-spgwu:
+    build:
+      context: ./images/oai-spgwu/
+      dockerfile: ./images/oai-spgwu/Dockerfile
+    image: oai-spgwu
+    environment:
+      - SGW_S1U_INTERFACE = "net2"
+      - SGW_SX_INTERFACE = "net1"
+      - PGW_SGI_INTERFACE = "net3"
+      - NETWORK_UE_IP = "192.168.20.0/24"
+      - PGWC_SX_IP_ADDRESS = "192.168.2.100"
+      - PGWU_SGI_GW = "192.168.3.101"
+    ports:
+      - "8805:8805"
+      - "2152:2152"
+    networks:
+      spgwu-net1:
+        ipv4_address: 192.168.2.101 
+      spgwu-net2:
+        ipv4_address: 172.16.2.100
+      spgwu-net3:
+        ipv4_address: 192.168.3.100
+  oai-enb:
+    build:
+      context: ./images/oai-enb/
+      dockerfile: ./images/oai-enb/Dockerfile
+    image: oai-enb
+    depends_on:
+      - oai-mme
+    environment:
+      - ENB_ID = "00e00"
+      - ENB_NAME = "eNB-Eurecom-LTEBox"
+      - MME_IP4 = "192.168.1.100"
+      - MME_IP6 = "::1"
+      - MCC = "208"
+      - TAC = "1"
+      - MNC = "96"
+      - MNC_LENGTH = "2"
+      - RU_LOCAL_IF = "net3"
+      - RU_LOCAL_IP = "192.168.18.206"
+      - RU_REMOTE_IP = "192.168.18.205"
+      - S1_MME_IF = "net1"
+      - S1_MME_IP = "192.168.1.101" 
+      - S1_U_IF = "net2"
+      - S1_U_IP = "172.16.2.101"
+      - X2C_IP = "172.16.2.101" 
+    ports:
+      - "22100:22100"
+      - "2152:2152"
+      - "36412:36412"
+      - "36422:36422"
+      - "50000:50000"
+      - "50001:50001"
+    networks:
+      enb-net1:
+        ipv4_address: 192.168.1.101 
+      enb-net2:
+        ipv4_address: 172.16.2.101
+      enb-net3:
+        ipv4_address: 192.168.18.206
+  oai-ue:
+    build:
+      context: ./images/oai-ue/
+      dockerfile: ./images/oai-ue/Dockerfile
+    image: oai-ue
+    depends_on:
+      - oai-enb
+    environment:
+      - RU_LOCAL_IF = "net1"
+      - RU_LOCAL_IP = "192.168.18.199"
+      - RU_REMOTE_IP = "192.168.18.206"
+      - BAND = "38"
+    ports:
+      - "50000:50000"
+      - "50001:50001"
+    networks:
+      ue-net1:
+        ipv4_address: 192.168.18.199
+        
+  cassandra-init:
+    image: cassandra
+    volumes:
+      - ./config/db/oai_db.cql:/root/oai_db.cql
+    command:
+      - sh
+      - -c
+      - cqlsh oai-cassandra --file /root/oai_db.cql
+      
+  oai-cassandra:
+    image: cassandra
+    volumes:
+      - cassandra-data:/var/lib/cassandra:rw
+    environment:
+      - CASSANDRA_DC = "DC1"
+      - CASSANDRA_RACK = "RACK1"
+      - CASSANDRA_CLUSTER_NAME = "OAI_HSS"
+      - CASSANDRA_ENDPOINT_SNITCH = "GossipingPropertyFileSnitch"
+    ports:
+      - "7000:7000"
+      - "7001:7001"
+      - "9042:9042"
+
+volumes:
+  cassandra-data:
+
+networks:
+  hss-net1:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 192.168.1.0/24
+         gateway: 192.168.1.1
+  mme-net1:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 192.168.1.0/24
+         gateway: 192.168.1.1
+  mme-net2:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 172.16.1.0/24
+         gateway: 172.16.1.1
+  spgwc-net1:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 192.168.2.0/24
+         gateway: 192.168.2.1
+  spgwc-net2:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 172.16.1.0/24
+         gateway: 172.16.1.1
+  spgwu-net1:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 192.168.2.0/24
+         gateway: 192.168.2.1
+  spgwu-net2:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 172.16.2.0/24
+         gateway: 172.16.2.1
+  spgwu-net3:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 192.168.3.0/24
+         gateway: 192.168.3.1
+  enb-net1:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 192.168.2.0/24
+         gateway: 192.168.2.1
+  enb-net2:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 172.16.1.0/24
+         gateway: 172.16.1.1
+  enb-net3:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 192.168.18.0/24
+         gateway: 192.168.18.1
+  ue-net1:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 192.168.18.0/24
+         gateway: 192.168.18.1
