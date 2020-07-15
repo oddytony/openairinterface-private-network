@@ -27,6 +27,8 @@ services:
    hostname: oai-hss.local.net
    networks:
       hss-net1:
+        aliases:
+            - oai-hss.local.net
         ipv4_address: 192.168.1.102
 
   oai-mme:
@@ -36,6 +38,7 @@ services:
     image: oai-mme
     depends_on:
       - oai-hss
+      - oai-spgwc
     environment:
       - MME_SERVICE= "oai-mme"
       - MME_REALM = "local.net"
@@ -57,6 +60,7 @@ services:
       - HSS_IP = "oai-hss.local.net" 
     volumes:
       - .config/mme/certs:/opt/oai-mme/certs
+    hostname: oai-mme.local.net
     ports:
       - "3870:3870"
       - "5870:5870"
@@ -116,6 +120,8 @@ services:
     image: oai-enb
     depends_on:
       - oai-mme
+      - oai-spgwc
+      - oai-spgwu
     environment:
       - ENB_ID = "00e00"
       - ENB_NAME = "eNB-Eurecom-LTEBox"
@@ -168,6 +174,8 @@ services:
         
   cassandra-init:
     image: cassandra
+    depends_on:
+      - oai-cassandra
     volumes:
       - ./config/db/oai_db.cql:/root/oai_db.cql
     command:
