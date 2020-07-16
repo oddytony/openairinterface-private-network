@@ -9,7 +9,7 @@ RUN if [ "$EURECOM_PROXY" == true ]; then git config --global http.proxy http://
 RUN git clone --depth=1 https://gitlab.eurecom.fr/oai/openairinterface5g.git
 COPY patches patches/
 RUN patch -p1 -d openairinterface5g < patches/0001-disable-nasmesh-and-rbtool-build.patch \
-    && patch -p1 -d openairinterface5g < patches/0002-disable-sched-fifo-fail-exits.patch \ 
+    && patch -p1 -d openairinterface5g < patches/0002-disable-sched-fifo-fail-exits.patch  
 RUN cd openairinterface5g/cmake_targets \
     && ln -sf /usr/local/bin/asn1c_oai /usr/local/bin/asn1c \
     && ln -sf /usr/local/share/asn1c_oai /usr/local/share/asn1c \

@@ -4,13 +4,11 @@ services:
   oai-build-base:
     build:
       context: ./images/oai-build-base/
-      dockerfile: ./images/oai-build-base/Dockerfile
     image: oai-build-base
     
   oai-hss:
     build:
       context: ./images/oai-hss/
-      dockerfile: ./images/oai-hss/Dockerfile
     image: oai-hss
     depends_on:
       - oai-build-base
@@ -31,17 +29,16 @@ services:
       - "5868:5868"
       - "9080:9080"
       - "9081:9081"
-   hostname: oai-hss.local.net
-   networks:
+    hostname: oai-hss.local.net
+    networks:
       hss-net1:
         aliases:
-            - oai-hss.local.net
+          - oai-hss.local.net
         ipv4_address: 192.168.1.102
 
   oai-mme:
     build:
       context: ./images/oai-mme/
-      dockerfile: ./images/oai-mme/Dockerfile
     image: oai-mme
     depends_on:
       - oai-build-base
@@ -68,7 +65,6 @@ services:
       - HSS_IP = "oai-hss.local.net" 
     volumes:
       - .config/mme/certs:/opt/oai-mme/certs
-    hostname: oai-mme.local.net
     ports:
       - "3870:3870"
       - "5870:5870"
@@ -83,7 +79,6 @@ services:
   oai-spgwc:
     build:
       context: ./images/oai-spgwc/
-      dockerfile: ./images/oai-spgwc/Dockerfile
     image: oai-spgwc
     depends_on:
       - oai-build-base
@@ -104,7 +99,6 @@ services:
   oai-spgwu:
     build:
       context: ./images/oai-spgwu/
-      dockerfile: ./images/oai-spgwu/Dockerfile
     image: oai-spgwu
     depends_on:
       - oai-build-base
@@ -128,7 +122,6 @@ services:
   oai-enb:
     build:
       context: ./images/oai-enb/
-      dockerfile: ./images/oai-enb/Dockerfile
     image: oai-enb
     depends_on:
       - oai-build-base
@@ -169,7 +162,6 @@ services:
   oai-ue:
     build:
       context: ./images/oai-ue/
-      dockerfile: ./images/oai-ue/Dockerfile
     image: oai-ue
     depends_on:
       - oai-build-base
@@ -222,7 +214,6 @@ networks:
     ipam:
      config:
        - subnet: 192.168.1.0/24
-         gateway: 192.168.1.1
   mme-net1:
     driver: macvlan
     driver_opts:
@@ -230,7 +221,6 @@ networks:
     ipam:
      config:
        - subnet: 192.168.1.0/24
-         gateway: 192.168.1.1
   mme-net2:
     driver: macvlan
     driver_opts:
@@ -238,7 +228,6 @@ networks:
     ipam:
      config:
        - subnet: 172.16.1.0/24
-         gateway: 172.16.1.1
   spgwc-net1:
     driver: macvlan
     driver_opts:
@@ -246,7 +235,6 @@ networks:
     ipam:
      config:
        - subnet: 192.168.2.0/24
-         gateway: 192.168.2.1
   spgwc-net2:
     driver: macvlan
     driver_opts:
@@ -254,7 +242,6 @@ networks:
     ipam:
      config:
        - subnet: 172.16.1.0/24
-         gateway: 172.16.1.1
   spgwu-net1:
     driver: macvlan
     driver_opts:
@@ -262,7 +249,6 @@ networks:
     ipam:
      config:
        - subnet: 192.168.2.0/24
-         gateway: 192.168.2.1
   spgwu-net2:
     driver: macvlan
     driver_opts:
@@ -270,7 +256,6 @@ networks:
     ipam:
      config:
        - subnet: 172.16.2.0/24
-         gateway: 172.16.2.1
   spgwu-net3:
     driver: macvlan
     driver_opts:
@@ -278,7 +263,6 @@ networks:
     ipam:
      config:
        - subnet: 192.168.3.0/24
-         gateway: 192.168.3.1
   enb-net1:
     driver: macvlan
     driver_opts:
@@ -286,7 +270,6 @@ networks:
     ipam:
      config:
        - subnet: 192.168.2.0/24
-         gateway: 192.168.2.1
   enb-net2:
     driver: macvlan
     driver_opts:
@@ -294,7 +277,6 @@ networks:
     ipam:
      config:
        - subnet: 172.16.1.0/24
-         gateway: 172.16.1.1
   enb-net3:
     driver: macvlan
     driver_opts:
@@ -302,7 +284,6 @@ networks:
     ipam:
      config:
        - subnet: 192.168.18.0/24
-         gateway: 192.168.18.1
   ue-net1:
     driver: macvlan
     driver_opts:
@@ -310,4 +291,3 @@ networks:
     ipam:
      config:
        - subnet: 192.168.18.0/24
-         gateway: 192.168.18.1
