@@ -1,5 +1,7 @@
 FROM ubuntu:bionic
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 LABEL name="oai-enb" \
       version="$GIT_TAG" \
       maintainer="Ighagbon Anthony <signormca@yahoo.com>" \
@@ -17,7 +19,8 @@ RUN git clone --depth=1 https://gitlab.eurecom.fr/oai/openairinterface5g.git
 COPY patches patches/
 RUN patch -p1 -d openairinterface5g < patches/0001-disable-nasmesh-and-rbtool-build.patch \
     && patch -p1 -d openairinterface5g < patches/0001-enable-sudoless-build.patch \
-    && patch -p1 -d openairinterface5g < patches/0002-disable-sched-fifo-fail-exits.patch  
+    && patch -p1 -d openairinterface5g < patches/0002-disable-sched-fifo-fail-exits.patch \
+    && patch -p1 -d openairinterface5g < patches/0002-modify-tar-command.patch	
 	
 RUN cd openairinterface5g/cmake_targets \
     && ./build_oai -I  --eNB --install-system-files -w USRP \
