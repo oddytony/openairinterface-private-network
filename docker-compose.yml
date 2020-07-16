@@ -31,7 +31,7 @@ services:
       - "9081:9081"
     hostname: oai-hss.local.net
     networks:
-      hss-net1:
+      net1:
         aliases:
           - oai-hss.local.net
         ipv4_address: 192.168.1.102
@@ -71,9 +71,9 @@ services:
       - "2123:2123"
     hostname: oai-mme.local.net
     networks:
-      mme-net1:
+      net1:
         ipv4_address: 192.168.1.100
-      mme-net2:
+      net2:
         ipv4_address: 172.16.1.100
       
   oai-spgwc:
@@ -91,9 +91,9 @@ services:
       - "8805:8805"
       - "2123:2123"
     networks:
-      spgwc-net1:
+      net3:
         ipv4_address: 192.168.2.100
-      spgwc-net2:
+      net2:
         ipv4_address: 172.16.1.101
       
   oai-spgwu:
@@ -113,11 +113,11 @@ services:
       - "8805:8805"
       - "2152:2152"
     networks:
-      spgwu-net1:
+      net3:
         ipv4_address: 192.168.2.101 
-      spgwu-net2:
+      net4:
         ipv4_address: 172.16.2.100
-      spgwu-net3:
+      net5:
         ipv4_address: 192.168.3.100
   oai-enb:
     build:
@@ -153,11 +153,11 @@ services:
       - "50000:50000"
       - "50001:50001"
     networks:
-      enb-net1:
+      net1:
         ipv4_address: 192.168.1.101 
-      enb-net2:
+      net4:
         ipv4_address: 172.16.2.101
-      enb-net3:
+      net6:
         ipv4_address: 192.168.18.206
   oai-ue:
     build:
@@ -175,7 +175,7 @@ services:
       - "50000:50000"
       - "50001:50001"
     networks:
-      ue-net1:
+      net6:
         ipv4_address: 192.168.18.199
         
   cassandra-init:
@@ -207,84 +207,42 @@ volumes:
   cassandra-data:
 
 networks:
-  hss-net1:
+  net1:
     driver: macvlan
     driver_opts:
       macvlan_mode: bridge
     ipam:
      config:
        - subnet: 192.168.1.0/24
-  mme-net1:
-    driver: macvlan
-    driver_opts:
-      macvlan_mode: bridge
-    ipam:
-     config:
-       - subnet: 192.168.1.0/24
-  mme-net2:
+  net2:
     driver: macvlan
     driver_opts:
       macvlan_mode: bridge
     ipam:
      config:
        - subnet: 172.16.1.0/24
-  spgwc-net1:
+  net3:
     driver: macvlan
     driver_opts:
       macvlan_mode: bridge
     ipam:
      config:
        - subnet: 192.168.2.0/24
-  spgwc-net2:
-    driver: macvlan
-    driver_opts:
-      macvlan_mode: bridge
-    ipam:
-     config:
-       - subnet: 172.16.1.0/24
-  spgwu-net1:
-    driver: macvlan
-    driver_opts:
-      macvlan_mode: bridge
-    ipam:
-     config:
-       - subnet: 192.168.2.0/24
-  spgwu-net2:
+  net4:
     driver: macvlan
     driver_opts:
       macvlan_mode: bridge
     ipam:
      config:
        - subnet: 172.16.2.0/24
-  spgwu-net3:
+  net5:
     driver: macvlan
     driver_opts:
       macvlan_mode: bridge
     ipam:
      config:
        - subnet: 192.168.3.0/24
-  enb-net1:
-    driver: macvlan
-    driver_opts:
-      macvlan_mode: bridge
-    ipam:
-     config:
-       - subnet: 192.168.2.0/24
-  enb-net2:
-    driver: macvlan
-    driver_opts:
-      macvlan_mode: bridge
-    ipam:
-     config:
-       - subnet: 172.16.1.0/24
-  enb-net3:
-    driver: macvlan
-    driver_opts:
-      macvlan_mode: bridge
-    ipam:
-     config:
-       - subnet: 192.168.18.0/24
-  ue-net1:
+  net6:
     driver: macvlan
     driver_opts:
       macvlan_mode: bridge
