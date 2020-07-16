@@ -110,7 +110,7 @@ services:
     depends_on:
       - oai-enb
     env_file:
-      - ./envs/enb.env
+      - ./envs/ue.env
     ports:
       - "50000:50000"
       - "50001:50001"
