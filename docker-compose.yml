@@ -1,12 +1,19 @@
 version: '3.4'
 
 services:
+  oai-build-base:
+    build:
+      context: ./images/oai-build-base/
+      dockerfile: ./images/oai-build-base/Dockerfile
+    image: oai-build-base
+    
   oai-hss:
     build:
       context: ./images/oai-hss/
       dockerfile: ./images/oai-hss/Dockerfile
     image: oai-hss
     depends_on:
+      - oai-build-base
       - oai-cassandra
     environment:
       - HOSTNAME = "localhost"
@@ -37,6 +44,7 @@ services:
       dockerfile: ./images/oai-mme/Dockerfile
     image: oai-mme
     depends_on:
+      - oai-build-base
       - oai-hss
       - oai-spgwc
     environment:
@@ -77,6 +85,8 @@ services:
       context: ./images/oai-spgwc/
       dockerfile: ./images/oai-spgwc/Dockerfile
     image: oai-spgwc
+    depends_on:
+      - oai-build-base
     environment:
       - PGW_SX_INTERFACE = "net1"
       - SGW_S11_INTERFACE = "net2"
@@ -96,6 +106,8 @@ services:
       context: ./images/oai-spgwu/
       dockerfile: ./images/oai-spgwu/Dockerfile
     image: oai-spgwu
+    depends_on:
+      - oai-build-base
     environment:
       - SGW_S1U_INTERFACE = "net2"
       - SGW_SX_INTERFACE = "net1"
@@ -119,6 +131,7 @@ services:
       dockerfile: ./images/oai-enb/Dockerfile
     image: oai-enb
     depends_on:
+      - oai-build-base
       - oai-mme
       - oai-spgwc
       - oai-spgwu
@@ -159,6 +172,7 @@ services:
       dockerfile: ./images/oai-ue/Dockerfile
     image: oai-ue
     depends_on:
+      - oai-build-base
       - oai-enb
     environment:
       - RU_LOCAL_IF = "net1"
