@@ -1,7 +1,18 @@
+FROM ubuntu:bionic
 
-FROM oai-build-base AS builder
+ARG DEBIAN_FRONTEND=noninteractive
+
+LABEL name="oai-hss" \
+      version="$GIT_TAG" \
+      maintainer="Ighagbon Anthony <signormca@yahoo.com>" \
+      io.k8s.description="openair-cn HSS $GIT_TAG." \
+      io.openshift.tags="oai,hss" \
+      io.openshift.non-scalable="true" \
+      io.openshift.wants="mariadb"
 
 ARG GIT_TAG=master
+
+RUN apt-get update && apt-get install -y gcc g++ build-essential git curl wget xxd
 
 WORKDIR /root
 
@@ -11,48 +22,15 @@ COPY patches patches/
 RUN patch -p1 -d openair-cn < patches/0001-enable-sudoless-build.patch
 
 RUN cd openair-cn/scripts \
-    && ln -sf /usr/local/bin/asn1c_cn /usr/local/bin/asn1c \
-    && ln -sf /usr/local/share/asn1c_cn /usr/local/share/asn1c \
-    && rm -rf /usr/local/lib/freeDiameter /usr/local/lib/libfd* \
     && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_hss_rel14 --check-installed-software --force \
     && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_hss_rel14 -v
-
-
-FROM ubuntu:bionic
-LABEL name="oai-hss" \
-      version="$GIT_TAG" \
-      maintainer="Ighagbon Anthony <signormca@yahoo.com>" \
-      io.k8s.description="openair-cn HSS $GIT_TAG." \
-      io.openshift.tags="oai,hss" \
-      io.openshift.non-scalable="true" \
-      io.openshift.wants="mariadb"
-
-RUN apt-get update && apt-get install -y \
-    libconfig-dev \
-	libidn2-dev \
-	libmariadbclient-dev \
-    lksctp-tools \
-	mysql-client \
-	iproute2 \
-	iputils-arping \
-	iputils-ping \
-	iputils-tracepath \
-	bind9 \
-    python-cassandra \
-    python3-cassandra \
-    python-blist \
-    python3-blist \
-
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/* 
 
 ENV APP_ROOT=/opt/oai-hss
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 
-COPY --from=builder /root/openair-cn/build/hss_rel14/bin/hss ${APP_ROOT}/bin/oai_hss
-COPY --from=builder /usr/local/lib/libfd* /lib64/
-COPY --from=builder /usr/local/lib/freeDiameter/* /usr/local/lib/freeDiameter/
-#COPY --from=builder /usr/local/lib64/libuv.so /lib64
+COPY /root/openair-cn/build/hss_rel14/bin/hss ${APP_ROOT}/bin/oai_hss
+COPY /usr/local/lib/libfd* /lib64/
+COPY /usr/local/lib64/libuv.so /lib64
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
 RUN chmod -R u+x ${APP_ROOT} && \

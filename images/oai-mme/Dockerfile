@@ -1,21 +1,3 @@
-
-FROM oai-build-base AS builder
-
-ARG GIT_TAG=master
-
-WORKDIR /root
-
-RUN git clone --depth=1 --branch=$GIT_TAG https://github.com/OPENAIRINTERFACE/openair-cn.git
-COPY patches patches/
-RUN patch -p1 -d openair-cn < patches/0001-enable-sudoless-build.patch
-RUN cd openair-cn/scripts \
-    && ln -sf /usr/local/bin/asn1c_cn /usr/local/bin/asn1c \
-    && ln -sf /usr/local/share/asn1c_cn /usr/local/share/asn1c \
-    && rm -rf /usr/local/lib/freeDiameter /usr/local/lib/libfd* \
-    && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_mme --check-installed-software --force \
-    && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_mme -c -v -b Debug
-
-
 FROM ubuntu:bionic
 LABEL name="oai-mme" \
       version="$GIT_TAG" \
@@ -23,26 +5,27 @@ LABEL name="oai-mme" \
       io.k8s.description="openair-cn MME $GIT_TAG." \
       io.openshift.tags="oai,mme" \
       io.openshift.non-scalable="true"
+	  
+ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y \
-    libconfig-dev \
-	libidn2-dev \
-	libasan2 \
-    lksctp-tools \
-	iproute2 \
-	iputils-arping \
-	iputils-ping \
-	iputils-tracepath \
-	bind9 \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/* 
+ARG GIT_TAG=master
+
+RUN apt-get update && apt-get install -y gcc g++ build-essential git curl wget xxd
+
+WORKDIR /root
+
+RUN git clone --depth=1 --branch=$GIT_TAG https://github.com/OPENAIRINTERFACE/openair-cn.git
+COPY patches patches/
+RUN patch -p1 -d openair-cn < patches/0001-enable-sudoless-build.patch
+RUN cd openair-cn/scripts \
+    && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_mme --check-installed-software --force \
+    && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_mme -c -v -b Debug
 
 ENV APP_ROOT=/opt/oai-mme
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
-COPY --from=builder /root/openair-cn/build/mme/build/mme ${APP_ROOT}/bin/
-COPY --from=builder /usr/local/lib/libfd* /lib64/
-COPY --from=builder /usr/local/lib/freeDiameter/* /usr/local/lib/freeDiameter/
-COPY --from=builder /usr/local/lib/liblfds* /usr/lib64/
+COPY /root/openair-cn/build/mme/build/mme ${APP_ROOT}/bin/
+COPY /usr/local/lib/libfd* /lib64/
+COPY /usr/local/lib/liblfds* /usr/lib64/
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
 RUN chmod -R u+x ${APP_ROOT} && \

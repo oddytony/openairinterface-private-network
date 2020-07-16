@@ -9,7 +9,7 @@ LABEL name="oai-enb" \
       io.openshift.tags="oai,enb" \
       io.openshift.non-scalable="true"
 
-RUN apt-get update && apt-get install -y gcc g++ build-essential git curl wget
+RUN apt-get update && apt-get install -y gcc g++ build-essential git curl wget xxd
 
 WORKDIR /root
 
@@ -23,8 +23,7 @@ RUN patch -p1 -d openairinterface5g < patches/0001-disable-nasmesh-and-rbtool-bu
     && patch -p1 -d openairinterface5g < patches/0002-modify-tar-command.patch	
 	
 RUN cd openairinterface5g/cmake_targets \
-    && ./build_oai -I  --eNB --install-system-files -w USRP \
-    && ./build_oai -c --eNB -w USRP --verbose-compile
+    && ./build_oai -I  --eNB --install-system-files -w USRP
 
 ENV APP_ROOT=/opt/oai-enb
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
