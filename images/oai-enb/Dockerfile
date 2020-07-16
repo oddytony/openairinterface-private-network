@@ -7,6 +7,8 @@ LABEL name="oai-enb" \
       io.openshift.tags="oai,enb" \
       io.openshift.non-scalable="true"
 
+RUN apt-get update && apt-get install -y gcc g++ build-essential git curl wget
+
 WORKDIR /root
 
 RUN if [ "$EURECOM_PROXY" == true ]; then git config --global http.proxy http://:@proxy.eurecom.fr:8080; fi
@@ -14,10 +16,11 @@ RUN if [ "$EURECOM_PROXY" == true ]; then git config --global http.proxy http://
 RUN git clone --depth=1 https://gitlab.eurecom.fr/oai/openairinterface5g.git
 COPY patches patches/
 RUN patch -p1 -d openairinterface5g < patches/0001-disable-nasmesh-and-rbtool-build.patch \
+    && patch -p1 -d openairinterface5g < patches/0001-enable-sudoless-build.patch \
     && patch -p1 -d openairinterface5g < patches/0002-disable-sched-fifo-fail-exits.patch  
 	
 RUN cd openairinterface5g/cmake_targets \
-    && ./build_oai -I  --eNB --install-system-files -w USRP
+    && ./build_oai -I  --eNB --install-system-files -w USRP \
     && ./build_oai -c --eNB -w USRP --verbose-compile
 
 ENV APP_ROOT=/opt/oai-enb
