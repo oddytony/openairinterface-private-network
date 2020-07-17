@@ -10,10 +10,18 @@ LABEL name="oai-spgwc" \
 ARG DEBIAN_FRONTEND=noninteractive
 
 ARG GIT_TAG=master
-
-RUN apt-get update && apt-get install -y gcc g++ build-essential git curl wget xxd
+ 
+RUN apt-get update && apt-get install -y git curl wget make cmake gcc g++ \
+    build-essential libpthread-stubs0-dev libbz2-dev zstd libaio-dev \
+    libsodium-dev libgflags-dev autoconf automake libatomic-ops-dev
 
 WORKDIR /root
+RUN git clone https://github.com/fmtlib/fmt.git && cd fmt \
+    && mkdir _build && cd _build \
+    && cmake .. \
+    && make -j$(nproc) \
+    && make install
+
 RUN git clone --depth=1 --branch=$GIT_TAG https://github.com/OPENAIRINTERFACE/openair-cn-cups.git
 RUN git clone --depth=1 --branch=master https://github.com/gabime/spdlog.git openair-cn-cups/build/ext/spdlog
 COPY patches patches/
