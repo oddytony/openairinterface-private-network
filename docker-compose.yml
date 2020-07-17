@@ -121,11 +121,9 @@ services:
       - oai-cassandra
     volumes:
       - ./config/db/oai_db.cql:/root/oai_db.cql
-    command:
-      - sh
-      - -c
-      - cqlsh oai-cassandra --file /root/oai_db.cql
-      
+      - ./scripts/wait-for-it.sh:/wait-for-it.sh
+    command: ["./wait-for-it.sh", "oai-cassandra:5432", "--", "cqlsh", "oai-cassandra", "--file", "/root/oai_db.cql"]
+    
   oai-cassandra:
     image: cassandra
     volumes:
