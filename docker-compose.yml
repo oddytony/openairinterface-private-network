@@ -28,7 +28,6 @@ services:
       context: ./images/oai-mme/
     image: oai-mme
     depends_on:
-      - oai-build-base
       - oai-hss
       - oai-spgwc
     env_file:
@@ -50,8 +49,6 @@ services:
     build:
       context: ./images/oai-spgwc/
     image: oai-spgwc
-    depends_on:
-      - oai-build-base
     env_file:
       - ./envs/spgwc.env 
     ports:

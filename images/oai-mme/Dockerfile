@@ -23,8 +23,6 @@ RUN cd openair-cn/scripts \
 
 ENV APP_ROOT=/opt/oai-mme
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
-COPY /usr/local/lib/libfd* /lib64/
-COPY /usr/local/lib/liblfds* /usr/lib64/
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
 RUN chmod -R u+x ${APP_ROOT} && \
