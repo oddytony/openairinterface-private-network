@@ -28,7 +28,6 @@ RUN cd openair-cn/scripts \
 ENV APP_ROOT=/opt/oai-hss
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 
-COPY /root/openair-cn/build/hss_rel14/bin/hss ${APP_ROOT}/bin/oai_hss
 COPY /usr/local/lib/libfd* /lib64/
 COPY /usr/local/lib64/libuv.so /lib64
 COPY scripts ${APP_ROOT}/bin/
@@ -44,5 +43,5 @@ EXPOSE 9042/tcp 5868/tcp 9080/tcp 9081/tcp
 
 VOLUME ["${APP_ROOT}/certs"]
 
-CMD ["/opt/oai-hss/bin/oai_hss", "-j", "/opt/oai-hss/etc/hss_rel14.json"]
+CMD ["/usr/local/bin/oai_hss", "-j", "/opt/oai-hss/etc/hss_rel14.json"]
 ENTRYPOINT ["/opt/oai-hss/bin/entrypoint.sh"]

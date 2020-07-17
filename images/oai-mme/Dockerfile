@@ -23,7 +23,6 @@ RUN cd openair-cn/scripts \
 
 ENV APP_ROOT=/opt/oai-mme
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
-COPY /root/openair-cn/build/mme/build/mme ${APP_ROOT}/bin/
 COPY /usr/local/lib/libfd* /lib64/
 COPY /usr/local/lib/liblfds* /usr/lib64/
 COPY scripts ${APP_ROOT}/bin/
@@ -39,5 +38,5 @@ EXPOSE 3870/tcp 5870/tcp 2123/udp
 
 VOLUME ["${APP_ROOT}/certs"]
 
-CMD ["/opt/oai-mme/bin/mme", "-c", "/opt/oai-mme/etc/mme.conf"]
+CMD ["/usr/local/bin/mme", "-c", "/opt/oai-mme/etc/mme.conf"]
 ENTRYPOINT ["/opt/oai-mme/bin/entrypoint.sh"]

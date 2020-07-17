@@ -27,8 +27,6 @@ RUN cd openairinterface5g/cmake_targets \
  
 ENV APP_ROOT=/opt/oai-ue
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
-COPY /root/openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${APP_ROOT}/bin/
-COPY /root/openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /lib64/
 RUN cd /lib64 \
     && ln -sf liboai_eth_transpro.so liboai_transpro.so \
     && ln -sf liboai_usrpdevif.so liboai_device.so \
@@ -45,7 +43,7 @@ WORKDIR ${APP_ROOT}
 # expose ports from ue.conf
 EXPOSE 50000/udp 50001/udp
 
-CMD ["/opt/oai-ue/bin/lte-uesoftmodem", \
+CMD ["/usr/local/bin/lte-uesoftmodem", \
     "-C", "2680000000", "-r", "25", "--nokrnmod", "1", \
     "-O", "/opt/oai-ue/etc/ue.conf"]
 ENTRYPOINT ["/opt/oai-ue/bin/entrypoint.sh"]

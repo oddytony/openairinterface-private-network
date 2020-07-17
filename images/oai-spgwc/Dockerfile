@@ -32,7 +32,6 @@ RUN cd openair-cn-cups/build/scripts \
 
 ENV APP_ROOT=/opt/oai-spgwc
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
-COPY /root/openair-cn-cups/build/spgw_c/build/spgwc ${APP_ROOT}/bin/
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
 RUN chmod -R u+x ${APP_ROOT} && \
@@ -44,6 +43,6 @@ WORKDIR ${APP_ROOT}
 # expose ports
 EXPOSE 2123/udp 8805/udp
 
-CMD ["/opt/oai-spgwc/bin/spgwc", "-c", "/opt/oai-spgwc/etc/spgw_c.conf", "-o"]
+CMD ["/usr/local/bin/spgwc", "-c", "/opt/oai-spgwc/etc/spgw_c.conf", "-o"]
 ENTRYPOINT ["/opt/oai-spgwc/bin/entrypoint.sh"]
 
