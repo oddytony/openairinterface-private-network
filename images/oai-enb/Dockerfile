@@ -9,7 +9,8 @@ LABEL name="oai-enb" \
       io.openshift.tags="oai,enb" \
       io.openshift.non-scalable="true"
 
-RUN apt-get update && apt-get install -y gcc g++ build-essential git curl wget xxd
+RUN apt-get update && apt-get install -y gcc g++ build-essential git curl wget xxd \
+     iproute2 iputils-arping iputils-ping iputils-tracepath bind9 \
 
 WORKDIR /root
 

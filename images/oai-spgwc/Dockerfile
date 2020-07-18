@@ -13,7 +13,8 @@ ARG GIT_TAG=master
  
 RUN apt-get update && apt-get install -y git curl wget make cmake gcc g++ \
     build-essential libpthread-stubs0-dev libbz2-dev zstd libaio-dev \
-    libsodium-dev libgflags-dev autoconf automake libatomic-ops-dev
+    libsodium-dev libgflags-dev autoconf automake libatomic-ops-dev \
+	iproute2 iputils-arping iputils-ping iputils-tracepath bind9 
 
 WORKDIR /root
 RUN git clone https://github.com/fmtlib/fmt.git && cd fmt \

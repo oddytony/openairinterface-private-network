@@ -12,7 +12,8 @@ LABEL name="oai-ue" \
 ARG GIT_TAG=master
 
 RUN apt-get update && apt-get install -y gcc g++ build-essential git curl wget \
- xxd linux-headers-5.3.0-1030-gcp 
+ xxd linux-headers-5.3.0-1030-gcp iproute2 iputils-arping iputils-ping \
+ iputils-tracepath bind9 
 
 WORKDIR /root
 
