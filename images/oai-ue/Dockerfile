@@ -18,6 +18,9 @@ RUN cd openairinterface5g/cmake_targets \
 ENV APP_ROOT=/opt/oai-ue
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 
+COPY scripts ${APP_ROOT}/bin/
+COPY configs ${APP_ROOT}/etc/
+
 RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${APP_ROOT}/bin/ \
     && cp openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /lib64/ \
     && cd /lib64 \
@@ -26,8 +29,6 @@ RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${AP
     && ln -sf libuhd.so.3.13 libuhd.so.3 \
     && ln -sf libuhd.so.3 libuhd.so
 	
-COPY scripts ${APP_ROOT}/bin/
-COPY configs ${APP_ROOT}/etc/
 RUN chmod -R u+x ${APP_ROOT} && \
     chgrp -R 0 ${APP_ROOT} && \
     chmod -R g=u ${APP_ROOT} /etc/passwd
