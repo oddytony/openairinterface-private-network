@@ -18,7 +18,7 @@ ENV APP_ROOT=/opt/oai-enb
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 	
 RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-softmodem ${APP_ROOT}/bin/ \
-    && cp openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /lib64/
+    && cp openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /lib64/ \
     && cd /lib64 \
     && ln -sf liboai_eth_transpro.so liboai_transpro.so \
     && ln -sf liboai_usrpdevif.so liboai_device.so \
