@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  oai-spgw-base:
+    build:
+      context: ./images/base/spgw/
+    image: oai-spgw-base
+  oai-enb-base:
+    build:
+      context: ./images/base/spgw/
+    image: oai-enb-base
