@@ -22,8 +22,8 @@ COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
 
 RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${APP_ROOT}/bin/ \
-    && cp openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /lib64/ \
-    && cd /lib64 \
+    && cp openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /usr/local/lib/ \
+    && cd /usr/local/lib \
     && ln -sf liboai_eth_transpro.so liboai_transpro.so \
     && ln -sf liboai_usrpdevif.so liboai_device.so \
     && ln -sf libuhd.so.3.13 libuhd.so.3 \
