@@ -20,7 +20,7 @@ WORKDIR /root
 RUN if [ "$EURECOM_PROXY" == true ]; then git config --global http.proxy http://:@proxy.eurecom.fr:8080; fi
 RUN git clone --depth=1 --branch=$GIT_TAG https://gitlab.eurecom.fr/oai/openairinterface5g.git
 COPY patches patches/
-RUN patch -p1 -d openairinterface5g < patches/disable_building_nasmesh_and_rbtool.patch \
+RUN patch -p1 -d openairinterface5g < patches/0001-disable-nasmesh-and-rbtool-build.patch \
     && patch -p1 -d openairinterface5g < patches/0001-enable-sudoless-build.patch \
 	&& patch -p1 -d openairinterface5g < patches/0002-disable-sched-fifo-fail-exits.patch \
 	&& patch -p1 -d openairinterface5g < patches/0002-modify-tar-command.patch	

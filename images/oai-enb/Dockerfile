@@ -12,17 +12,19 @@ LABEL name="oai-enb" \
 WORKDIR /root
 
 RUN cd openairinterface5g/cmake_targets \
-    && ./build_oai -c --eNB -w USRP --verbose-compile
-
+    && ./build_oai -c --eNB -w USRP --verbose-compile 
+	
 ENV APP_ROOT=/opt/oai-enb
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
-COPY openairinterface5g/cmake_targets/lte_build_oai/build/lte-softmodem ${APP_ROOT}/bin/
-COPY openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /lib64/
-RUN cd /lib64 \
+	
+RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-softmodem ${APP_ROOT}/bin/ \
+    && cp openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /lib64/
+    && cd /lib64 \
     && ln -sf liboai_eth_transpro.so liboai_transpro.so \
     && ln -sf liboai_usrpdevif.so liboai_device.so \
     && ln -sf libuhd.so.3.13 libuhd.so.3 \
     && ln -sf libuhd.so.3 libuhd.so
+	
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
 RUN chmod -R u+x ${APP_ROOT} && \
