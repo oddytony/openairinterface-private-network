@@ -43,6 +43,6 @@ WORKDIR ${APP_ROOT}
 # expose ports
 EXPOSE 2123/udp 8805/udp
 
-CMD ["/usr/local/bin/spgwc", "-c", "/opt/oai-spgwc/etc/spgw_c.conf", "-o"]
+CMD ["/usr/local/bin/spgwc", "-c", "/opt/oai-spgwc/etc/spgw_c.conf" ]
 ENTRYPOINT ["/opt/oai-spgwc/bin/entrypoint.sh"]
 
