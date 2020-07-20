@@ -21,7 +21,7 @@ ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
 
-RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${APP_ROOT}/bin/ \
+RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem /usr/local/bin/ \
     && cp openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /usr/local/lib/ \
     && cd /usr/local/lib \
     && ln -sf liboai_eth_transpro.so liboai_transpro.so \
@@ -38,7 +38,7 @@ WORKDIR ${APP_ROOT}
 # expose ports from ue.conf
 EXPOSE 50000/udp 50001/udp
 
-CMD ["/opt/oai-ue/bin/lte-uesoftmodem", \
+CMD ["/usr/local/bin/lte-uesoftmodem", \
     "-C", "2680000000", "-r", "25", "--nokrnmod", "1", \
     "-O", "/opt/oai-ue/etc/ue.conf"]
 ENTRYPOINT ["/opt/oai-ue/bin/entrypoint.sh"]
