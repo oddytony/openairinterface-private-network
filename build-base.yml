@@ -9,3 +9,7 @@ services:
     build:
       context: ./images/base/enb/
     image: oai-enb-base
+  oai-enb-base:
+    build:
+      context: ./images/base/epc/
+    image: oai-epc-base
