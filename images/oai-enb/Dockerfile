@@ -20,7 +20,7 @@ ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
 	
-RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-softmodem ${APP_ROOT}/bin/ \
+RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-softmodem /usr/local/bin/ \
     && cp openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /usr/local/lib/ \
     && cd /usr/local/lib \
     && ln -sf liboai_eth_transpro.so liboai_transpro.so \
@@ -46,5 +46,5 @@ EXPOSE 50000/udp
 # IF5 / ECPRI (data)
 EXPOSE 50001/udp
 
-CMD ["/opt/oai-enb/bin/lte-softmodem", "-O", "/opt/oai-enb/etc/enb.conf"]
+CMD ["/usr/local/bin/lte-softmodem", "-O", "/opt/oai-enb/etc/enb.conf"]
 ENTRYPOINT ["/opt/oai-enb/bin/entrypoint.sh"]
