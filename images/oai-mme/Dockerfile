@@ -19,8 +19,7 @@ RUN git clone --depth=1 --branch=$GIT_TAG https://github.com/OPENAIRINTERFACE/op
 COPY patches patches/
 RUN patch -p1 -d openair-cn < patches/0001-enable-sudoless-build.patch
 RUN cd openair-cn/scripts \
-    && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_mme --check-installed-software --force \
-    && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_mme -c -v -b Debug
+    && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_mme -c -v --check-installed-software --force -b Debug
 
 ENV APP_ROOT=/opt/oai-mme
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}

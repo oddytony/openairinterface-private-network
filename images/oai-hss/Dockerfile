@@ -23,8 +23,7 @@ COPY patches patches/
 RUN patch -p1 -d openair-cn < patches/0001-enable-sudoless-build.patch
 
 RUN cd openair-cn/scripts \
-    && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_hss_rel14 --check-installed-software --force \
-    && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_hss_rel14 -v
+    && OPENAIRCN_DIR=$(dirname $(pwd)) ./build_hss_rel14 -c -v --check-installed-software --force -b Debug
 
 ENV APP_ROOT=/opt/oai-hss
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
