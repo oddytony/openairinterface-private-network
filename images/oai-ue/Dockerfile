@@ -16,14 +16,14 @@ RUN cd openairinterface5g/cmake_targets \
    
 
 ENV APP_ROOT=/opt/oai-ue
-ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
+ENV APP_DIR=/usr/local
 
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
 
-RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem /usr/local/bin/ \
-    && cp openairinterface5g/cmake_targets/lte_build_oai/build/*.so* /usr/local/lib/ \
-    && cd /usr/local/lib \
+RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${APP_DIR}/bin/ \
+    && cp openairinterface5g/cmake_targets/lte_build_oai/build/*.so* ${APP_DIR}/lib/ \
+    && cd ${APP_DIR}/lib \
     && ln -sf liboai_eth_transpro.so liboai_transpro.so \
     && ln -sf liboai_usrpdevif.so liboai_device.so \
     && ln -sf libuhd.so.3.13 libuhd.so.3 \
@@ -32,8 +32,6 @@ RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem /usr
 RUN chmod -R u+x ${APP_ROOT} && \
     chgrp -R 0 ${APP_ROOT} && \
     chmod -R g=u ${APP_ROOT} /etc/passwd
-USER 10001
-WORKDIR ${APP_ROOT}
 
 # expose ports from ue.conf
 EXPOSE 50000/udp 50001/udp
