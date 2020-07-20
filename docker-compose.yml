@@ -116,14 +116,12 @@ services:
         ipv4_address: 192.168.18.199
         
   cassandra-init:
-    image: cassandra
-    restart: on-failure
+    build:
+      context: ./images/cassandra/
+    image: cassandra-init
     depends_on:
       - oai-cassandra
-    volumes:
-      - ./config/db/oai_db.cql:/root/oai_db.cql
-      - ./scripts/wait-for-it.sh:/wait-for-it.sh
-    command: ["./wait-for-it.sh", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/root/oai_db.cql"]
+    command: ["./wait-for-it", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/oai_db.cql"]
     
   oai-cassandra:
     image: cassandra
