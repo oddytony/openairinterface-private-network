@@ -121,7 +121,7 @@ services:
     image: cassandra-init
     depends_on:
       - oai-cassandra
-    command: ["./wait-for-it", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/oai_db.cql"]
+    command: ["./wait-for-it", "-t", "30", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/oai_db.cql"]
     
   oai-cassandra:
     image: cassandra
