@@ -74,7 +74,8 @@ services:
         ipv4_address: 192.168.2.101 
       net4:
         ipv4_address: 172.16.2.100
-    
+      net5:
+        ipv4_address: 192.168.3.100
   oai-enb:
     build:
       context: ./images/oai-enb/
