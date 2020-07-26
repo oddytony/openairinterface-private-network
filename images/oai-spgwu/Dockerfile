@@ -24,5 +24,5 @@ WORKDIR ${APP_ROOT}
 # expose ports
 EXPOSE 2152/udp 8805/udp
 
-CMD ["/usr/local/bin/spgwu", "-c", "/opt/oai-spgwu/etc/spgw_u.conf", "-o"]
+CMD ["/usr/local/bin/spgwu", "-c", "/opt/oai-spgwu/etc/spgw_u.conf"]
 ENTRYPOINT ["/opt/oai-spgwu/bin/entrypoint.sh"]
