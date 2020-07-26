@@ -1,27 +1,14 @@
 version: '3.4'
 
 services:
-  oai-build-base:
-    build:
-      context: ./images/oai-build-base/
-    image: oai-build-base
-    
   oai-hss:
     build:
       context: ./images/oai-hss/
     image: oai-hss
     depends_on:
-      - oai-build-base
       - oai-cassandra
-    environment:
-      - HOSTNAME = "localhost"
-      - DB_FQDN = "oai-cassandra"
-      - DB_NAME = "vhss"
-      - DB_USER = "cassandra"
-      - DB_PASSWORD = "cassandra"
-      - OP_KEY = "11111111111111111111111111111111"
-      - HSS_FQDN = "oai-hss"
-      - ROAMING_ALLOWED = "true"
+    env_file:
+      - ./envs/hss.env
     volumes:
       - .config/hss/certs:/opt/oai-hss/certs
     ports:
@@ -41,28 +28,10 @@ services:
       context: ./images/oai-mme/
     image: oai-mme
     depends_on:
-      - oai-build-base
       - oai-hss
       - oai-spgwc
-    environment:
-      - MME_SERVICE= "oai-mme"
-      - MME_REALM = "local.net"
-      - MME_GID = "4"
-      - MME_CODE = "1"
-      - NW_IF_S1C = "net1"
-      - NW_IF_S11 = "net2"
-      - NW_IF_S10 = "lo"
-      - MCC = "208"
-      - MNC = "96"
-      - TAC = "1"
-      - MME_CIDR_S1C = "192.168.1.100/24"
-      - MME_CIDR_S11 = "172.16.1.100/24" 
-      - MME_CIDR_S10 = "127.0.0.1/32"
-      - SGW_CIDR_S11 = "172.16.1.101/24"
-      - HSS_SERVICE = "oai-hss.local.net"
-      - HSS_REALM = "local.net"
-      - HSS_HOSTNAME = "oai-hss"
-      - HSS_IP = "oai-hss.local.net" 
+    env_file:
+      - ./envs/mme.env 
     volumes:
       - .config/mme/certs:/opt/oai-mme/certs
     ports:
@@ -80,13 +49,8 @@ services:
     build:
       context: ./images/oai-spgwc/
     image: oai-spgwc
-    depends_on:
-      - oai-build-base
-    environment:
-      - PGW_SX_INTERFACE = "net1"
-      - SGW_S11_INTERFACE = "net2"
-      - UE_IP_ADDRESS_POOL = "192.168.20.2-192.168.20.200"
-      - UE_DNS_SERVER = "192.168.18.129"
+    env_file:
+      - ./envs/spgwc.env 
     ports:
       - "8805:8805"
       - "2123:2123"
@@ -100,18 +64,13 @@ services:
     build:
       context: ./images/oai-spgwu/
     image: oai-spgwu
-    depends_on:
-      - oai-build-base
-    environment:
-      - SGW_S1U_INTERFACE = "net2"
-      - SGW_SX_INTERFACE = "net1"
-      - PGW_SGI_INTERFACE = "net3"
-      - NETWORK_UE_IP = "192.168.20.0/24"
-      - PGWC_SX_IP_ADDRESS = "192.168.2.100"
-      - PGWU_SGI_GW = "192.168.3.101"
+    env_file:
+      - ./envs/spgwu.env
     ports:
       - "8805:8805"
       - "2152:2152"
+    cap_add:
+      - NET_ADMIN
     networks:
       net3:
         ipv4_address: 192.168.2.101 
@@ -124,27 +83,11 @@ services:
       context: ./images/oai-enb/
     image: oai-enb
     depends_on:
-      - oai-build-base
       - oai-mme
       - oai-spgwc
       - oai-spgwu
-    environment:
-      - ENB_ID = "00e00"
-      - ENB_NAME = "eNB-Eurecom-LTEBox"
-      - MME_IP4 = "192.168.1.100"
-      - MME_IP6 = "::1"
-      - MCC = "208"
-      - TAC = "1"
-      - MNC = "96"
-      - MNC_LENGTH = "2"
-      - RU_LOCAL_IF = "net3"
-      - RU_LOCAL_IP = "192.168.18.206"
-      - RU_REMOTE_IP = "192.168.18.205"
-      - S1_MME_IF = "net1"
-      - S1_MME_IP = "192.168.1.101" 
-      - S1_U_IF = "net2"
-      - S1_U_IP = "172.16.2.101"
-      - X2C_IP = "172.16.2.101" 
+    env_file:
+      - ./envs/enb.env
     ports:
       - "22100:22100"
       - "2152:2152"
@@ -164,13 +107,9 @@ services:
       context: ./images/oai-ue/
     image: oai-ue
     depends_on:
-      - oai-build-base
       - oai-enb
-    environment:
-      - RU_LOCAL_IF = "net1"
-      - RU_LOCAL_IP = "192.168.18.199"
-      - RU_REMOTE_IP = "192.168.18.206"
-      - BAND = "38"
+    env_file:
+      - ./envs/ue.env
     ports:
       - "50000:50000"
       - "50001:50001"
@@ -179,16 +118,13 @@ services:
         ipv4_address: 192.168.18.199
         
   cassandra-init:
-    image: cassandra
+    build:
+      context: ./images/cassandra/
+    image: cassandra-init
     depends_on:
       - oai-cassandra
-    volumes:
-      - ./config/db/oai_db.cql:/root/oai_db.cql
-    command:
-      - sh
-      - -c
-      - cqlsh oai-cassandra --file /root/oai_db.cql
-      
+    command: ["./wait-for-it", "-t", "30", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/oai_db.cql"]
+    
   oai-cassandra:
     image: cassandra
     volumes:

@@ -1,0 +1,25 @@
+From e12f29bdf3e70cae8c6f2832046bcee8b534602f Mon Sep 17 00:00:00 2001
+From: manexwayo <wayomanasseh@gmail.com>
+Date: Thu, 16 Jul 2020 18:40:13 +0100
+Subject: [PATCH] enable sudoless build
+
+---
+ cmake_targets/tools/build_helper | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake_targets/tools/build_helper b/cmake_targets/tools/build_helper
+index da5dfbe..ff6ad1b 100755
+--- a/cmake_targets/tools/build_helper
++++ b/cmake_targets/tools/build_helper
+@@ -40,7 +40,7 @@ esac
+ KERNEL_VERSION=$(uname -r | cut -d '.' -f1)
+ KERNEL_MAJOR=$(uname -r | cut -d '.' -f2)
+ 
+-SUDO='sudo -E'
++SUDO=''
+ 
+ ###############################
+ ## echo and  family
+-- 
+2.25.1.windows.1
+
