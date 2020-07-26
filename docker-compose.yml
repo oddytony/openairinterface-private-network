@@ -97,6 +97,8 @@ services:
       - "36422:36422"
       - "50000:50000"
       - "50001:50001"
+    cap_add:
+      - NET_ADMIN
     networks:
       net1:
         ipv4_address: 192.168.1.101 
@@ -115,6 +117,8 @@ services:
     ports:
       - "50000:50000"
       - "50001:50001"
+    cap_add:
+      - NET_ADMIN
     networks:
       net6:
         ipv4_address: 192.168.18.199
@@ -125,7 +129,7 @@ services:
     image: cassandra-init
     depends_on:
       - oai-cassandra
-    command: ["./wait-for-it", "-t", "30", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra:9042", "--file", "/oai_db.cql"]
+    command: ["./wait-for-it", "-t", "30", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/oai_db.cql"]
     
   oai-cassandra:
     image: cassandra
