@@ -18,6 +18,7 @@ ENV APP_ROOT=/opt/oai-mme
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
+COPY certs ${APP_ROOT}/certs/
 RUN chmod -R u+x ${APP_ROOT} && \
     chgrp -R 0 ${APP_ROOT} && \
     chmod -R g=u ${APP_ROOT} /etc/passwd

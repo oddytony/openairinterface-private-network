@@ -9,8 +9,6 @@ services:
       - oai-cassandra
     env_file:
       - ./envs/hss.env
-    volumes:
-      - .config/hss/certs:/opt/oai-hss/certs
     ports:
       - "3868:3868"
       - "5868:5868"
@@ -21,6 +19,7 @@ services:
     networks:
       net1:
         ipv4_address: 192.168.1.102
+      default: {}
 
   oai-mme:
     build:
@@ -31,8 +30,6 @@ services:
       - oai-spgwc
     env_file:
       - ./envs/mme.env 
-    volumes:
-      - .config/mme/certs:/opt/oai-mme/certs
     ports:
       - "3870:3870"
       - "5870:5870"
@@ -40,7 +37,6 @@ services:
     hostname: oai-mme
     domainname: local.net
     networks:
-      - default
       net1:
         ipv4_address: 192.168.1.100
       net2:
