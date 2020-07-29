@@ -16,11 +16,10 @@ services:
       - "5868:5868"
       - "9080:9080"
       - "9081:9081"
-    hostname: oai-hss.local.net
+    hostname: oai-hss
+    domainname: local.net
     networks:
       net1:
-        aliases:
-          - oai-hss.local.net
         ipv4_address: 192.168.1.102
 
   oai-mme:
@@ -38,7 +37,8 @@ services:
       - "3870:3870"
       - "5870:5870"
       - "2123:2123"
-    hostname: oai-mme.local.net
+    hostname: oai-mme
+    domainname: local.net
     networks:
       net1:
         ipv4_address: 192.168.1.100
@@ -56,6 +56,8 @@ services:
       - "2123:2123"
     cap_add:
       - NET_ADMIN
+    hostname: oai-spgwc
+    domainname: local.net
     networks:
       net3:
         ipv4_address: 192.168.2.100
@@ -73,6 +75,8 @@ services:
       - "2152:2152"
     cap_add:
       - NET_ADMIN
+    hostname: oai-spgwu
+    domainname: local.net
     networks:
       net3:
         ipv4_address: 192.168.2.101 
@@ -90,6 +94,8 @@ services:
       - oai-spgwu
     env_file:
       - ./envs/enb.env
+    devices:
+      - "/dev/net/tun:/dev/net/tun"
     ports:
       - "22100:22100"
       - "2152:2152"
@@ -99,6 +105,8 @@ services:
       - "50001:50001"
     cap_add:
       - NET_ADMIN
+    hostname: oai-enb
+    domainname: local.net
     networks:
       net1:
         ipv4_address: 192.168.1.101 
@@ -114,11 +122,15 @@ services:
       - oai-enb
     env_file:
       - ./envs/ue.env
+    devices:
+      - "/dev/net/tun:/dev/net/tun"
     ports:
       - "50000:50000"
       - "50001:50001"
     cap_add:
       - NET_ADMIN
+    hostname: oai-ue
+    domainname: local.net
     networks:
       net6:
         ipv4_address: 192.168.18.199
@@ -132,6 +144,8 @@ services:
       - CASSANDRA_RACK = "RACK1"
       - CASSANDRA_CLUSTER_NAME = "OAI_HSS"
       - CASSANDRA_ENDPOINT_SNITCH = "GossipingPropertyFileSnitch"
+    hostname: oai-cassandra
+    domainname: oai-cassandra.local.net
     ports:
       - "7000:7000"
       - "7001:7001"
