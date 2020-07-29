@@ -105,6 +105,7 @@ services:
       - "50001:50001"
     cap_add:
       - NET_ADMIN
+    privileged: true
     hostname: oai-enb
     domainname: local.net
     networks:
@@ -129,6 +130,7 @@ services:
       - "50001:50001"
     cap_add:
       - NET_ADMIN
+    privileged: true
     hostname: oai-ue
     domainname: local.net
     networks:
