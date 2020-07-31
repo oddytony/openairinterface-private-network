@@ -1,6 +1,34 @@
 version: '3.4'
 
 services:
+
+ cassandra-init:
+    build:
+      context: ./images/cassandra/
+    image: cassandra-init
+    depends_on:
+      - oai-cassandra
+    command: ["./wait-for-it", "-t", "90", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/oai_db.cql"] 
+  oai-cassandra:
+    image: cassandra
+    volumes:
+      - cassandra-data:/var/lib/cassandra:rw
+    environment:
+      - CASSANDRA_DC = "DC1"
+      - CASSANDRA_RACK = "RACK1"
+      - CASSANDRA_CLUSTER_NAME = "OAI_HSS"
+      - CASSANDRA_ENDPOINT_SNITCH = "GossipingPropertyFileSnitch"
+    hostname: oai-cassandra
+    domainname: oai-cassandra.local.net
+    ports:
+      - "7000:7000"
+      - "7001:7001"
+      - "9042:9042"
+
+volumes:
+  cassandra-data:
+
+
   oai-hss:
     build:
       context: ./images/oai-hss/
@@ -133,33 +161,7 @@ services:
     networks:
       net6:
         ipv4_address: 192.168.18.199
-  cassandra-init:
-    build:
-      context: ./images/cassandra/
-    image: cassandra-init
-    depends_on:
-      - oai-cassandra
-    command: ["./wait-for-it", "-t", "30", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/oai_db.cql"] 
-  oai-cassandra:
-    image: cassandra
-    volumes:
-      - cassandra-data:/var/lib/cassandra:rw
-    environment:
-      - CASSANDRA_DC = "DC1"
-      - CASSANDRA_RACK = "RACK1"
-      - CASSANDRA_CLUSTER_NAME = "OAI_HSS"
-      - CASSANDRA_ENDPOINT_SNITCH = "GossipingPropertyFileSnitch"
-    hostname: oai-cassandra
-    domainname: oai-cassandra.local.net
-    ports:
-      - "7000:7000"
-      - "7001:7001"
-      - "9042:9042"
-
-volumes:
-  cassandra-data:
-
-networks:
+ networks:
   net1:
     driver: macvlan
     driver_opts:
