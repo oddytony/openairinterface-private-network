@@ -40,6 +40,6 @@ RUN chmod -R u+x ${APP_ROOT} && \
 EXPOSE 50000/udp 50001/udp
 
 CMD ["/usr/local/bin/lte-uesoftmodem", \
-    "-C", "2680000000", "-r", "25", "--nokrnmod", "1", "--basicsim", "--noS1", \
+    "-C", "2680000000", "-r", "25", "--nokrnmod", "1", \
     "-O", "/opt/oai-ue/etc/ue.conf"]
 ENTRYPOINT ["/opt/oai-ue/bin/entrypoint.sh"]
