@@ -133,7 +133,13 @@ services:
     networks:
       net6:
         ipv4_address: 192.168.18.199
-    
+  cassandra-init:
+    build:
+      context: ./images/cassandra/
+    image: cassandra-init
+    depends_on:
+      - oai-cassandra
+    command: ["./wait-for-it", "-t", "30", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/oai_db.cql"] 
   oai-cassandra:
     image: cassandra
     volumes:
