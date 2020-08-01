@@ -144,11 +144,8 @@ services:
     image: cassandra
     volumes:
       - cassandra-data:/var/lib/cassandra:rw
-    environment:
-      - CASSANDRA_DC = "DC1"
-      - CASSANDRA_RACK = "RACK1"
-      - CASSANDRA_CLUSTER_NAME = "OAI_HSS"
-      - CASSANDRA_ENDPOINT_SNITCH = "GossipingPropertyFileSnitch"
+    env_file:
+      - ./envs/cassandra.env
     hostname: oai-cassandra
     domainname: oai-cassandra.local.net
     ports:
