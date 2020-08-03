@@ -16,6 +16,7 @@ services:
       - "9081:9081"
     hostname: oai-hss
     domainname: local.net
+    command: ["/opt/oai-hss/bin/wait-for-it", "-t", "60", "oai-cassandra:9042", "--", "/usr/local/bin/oai_hss", "-j", "/opt/oai-hss/etc/hss_rel14.json"]
     networks:
       net1:
         ipv4_address: 192.168.1.102
@@ -36,6 +37,7 @@ services:
       - "2123:2123"
     hostname: oai-mme
     domainname: local.net
+    command: ["/opt/oai-mme/bin/wait-for-it", "-t", "60", "oai-hss:3868", "--", "/usr/local/bin/mme", "-c", "/opt/oai-mme/etc/mme.conf"]
     networks:
       net1:
         ipv4_address: 192.168.1.100
@@ -105,6 +107,7 @@ services:
     privileged: true
     hostname: oai-enb
     domainname: local.net
+    command: ["/opt/oai-enb/bin/wait-for-it", "-t", "60", "oai-mme:2123", "--", "/usr/local/bin/lte-softmodem", "-O", "/opt/oai-enb/etc/enb.conf"]
     networks:
       net1:
         ipv4_address: 192.168.1.101 
@@ -130,6 +133,7 @@ services:
     privileged: true
     hostname: oai-ue
     domainname: local.net
+    command: ["/opt/oai-ue/bin/wait-for-it", "-t", "60", "oai-enb:50000", "--", "/usr/local/bin/lte-uesoftmodem", "-C", "2680000000", "-r", "25", "--nokrnmod", "1", "-O", "/opt/oai-ue/etc/ue.conf"]
     networks:
       net6:
         ipv4_address: 192.168.18.199
@@ -139,7 +143,7 @@ services:
     image: cassandra-init
     depends_on:
       - oai-cassandra
-    command: ["./wait-for-it", "-t", "30", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/oai_db.cql"] 
+    command: ["./wait-for-it", "-t", "60", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/oai_db.cql"] 
   oai-cassandra:
     image: cassandra
     volumes:
