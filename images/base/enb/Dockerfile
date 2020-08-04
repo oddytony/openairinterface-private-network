@@ -17,8 +17,7 @@ RUN apt-get update && apt-get install -y gcc g++ build-essential git curl wget \
 
 WORKDIR /root
 
-RUN if [ "$EURECOM_PROXY" == true ]; then git config --global http.proxy http://:@proxy.eurecom.fr:8080; fi
-RUN git clone --depth=1 --branch=$GIT_TAG https://gitlab.eurecom.fr/oai/openairinterface5g.git
+COPY openairinterface5g openairinterface5g/
 COPY patches patches/
 RUN patch -p1 -d openairinterface5g < patches/0001-disable-nasmesh-and-rbtool-build.patch \
     && patch -p1 -d openairinterface5g < patches/0001-enable-sudoless-build.patch \

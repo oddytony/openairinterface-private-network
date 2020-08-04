@@ -17,8 +17,7 @@ RUN apt-get update && apt-get install -y gcc g++ build-essential git curl wget x
 
 WORKDIR /root
 
-RUN git clone --depth=1 --branch=$GIT_TAG https://github.com/OPENAIRINTERFACE/openair-cn.git
-
+COPY openair-cn openair-cn/
 COPY patches patches/
 RUN patch -p1 -d openair-cn < patches/0001-enable-sudoless-build.patch
 
