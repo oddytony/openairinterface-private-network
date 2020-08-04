@@ -1,4 +1,4 @@
-CREATE KEYSPACE IF NOT EXISTS vhss WITH replication = {'class': 'NetworkTopologyStrategy', 'DC1': '1'};
+CREATE KEYSPACE IF NOT EXISTS vhss WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'};
 
 CREATE TABLE IF NOT EXISTS vhss.users_imsi (
     imsi text PRIMARY KEY,
@@ -92,9 +92,8 @@ CREATE TABLE IF NOT EXISTS vhss.extid_imsi_xref (
     primary key (imsi, extid)
 );
 
-
-INSERT into vhss.mmeidentity JSON '{"idmmeidentity":"1","mmeisdn":"mme-isdn", "mmehost":"mme.openair4G.eur", "mmerealm":"openair4G.eur", "ue_reachability":"1"}';
-INSERT into vhss.mmeidentity_host JSON '{"idmmeidentity":"1","mmeisdn":"mme-isdn", "mmehost":"mme.openair4G.eur", "mmerealm":"openair4G.eur", "ue_reachability":"1"}';
+INSERT into vhss.mmeidentity JSON '{"idmmeidentity":"1","mmeisdn":"mme-isdn", "mmehost":"oai-mme", "mmerealm":"local.net", "ue_reachability":"1"}';
+INSERT into vhss.mmeidentity_host JSON '{"idmmeidentity":"1","mmeisdn":"mme-isdn", "mmehost":"oai-mme", "mmerealm":"local.net", "ue_reachability":"1"}';
 
 
 
