@@ -22,10 +22,11 @@ ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
+COPY certs ${APP_ROOT}/certs/
 RUN chmod -R u+x ${APP_ROOT} && \
     chgrp -R 0 ${APP_ROOT} && \
     chmod -R g=u ${APP_ROOT} /etc/passwd
-USER 10001
+
 WORKDIR ${APP_ROOT}
 
 # expose ports configured in hss_fd.conf
@@ -33,5 +34,6 @@ EXPOSE 9042/tcp 5868/tcp 9080/tcp 9081/tcp
 
 VOLUME ["${APP_ROOT}/certs"]
 
-CMD ["/usr/local/bin/oai_hss", "-j", "/opt/oai-hss/etc/hss_rel14.json"]
 ENTRYPOINT ["/opt/oai-hss/bin/entrypoint.sh"]
+
+CMD ["/usr/local/bin/oai_hss", "-j", "/opt/oai-hss/etc/hss_rel14.json"]

@@ -31,7 +31,10 @@ RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${AP
 	
 RUN chmod -R u+x ${APP_ROOT} && \
     chgrp -R 0 ${APP_ROOT} && \
-    chmod -R g=u ${APP_ROOT} /etc/passwd
+    chmod -R g=u ${APP_ROOT} /etc/passwd && \
+    mkdir -p /dev/net && \
+	mknod /dev/net/tun c 10 200 && \
+	chmod 600 /dev/net/tun
 
 # expose ports from ue.conf
 EXPOSE 50000/udp 50001/udp

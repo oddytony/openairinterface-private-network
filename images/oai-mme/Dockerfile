@@ -18,10 +18,11 @@ ENV APP_ROOT=/opt/oai-mme
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
+COPY certs ${APP_ROOT}/certs/
 RUN chmod -R u+x ${APP_ROOT} && \
     chgrp -R 0 ${APP_ROOT} && \
     chmod -R g=u ${APP_ROOT} /etc/passwd
-#USER 10001
+
 WORKDIR ${APP_ROOT}
 
 # expose ports
@@ -29,5 +30,7 @@ EXPOSE 3870/tcp 5870/tcp 2123/udp
 
 VOLUME ["${APP_ROOT}/certs"]
 
-CMD ["/usr/local/bin/mme", "-c", "/opt/oai-mme/etc/mme.conf"]
 ENTRYPOINT ["/opt/oai-mme/bin/entrypoint.sh"]
+
+CMD ["/usr/local/bin/mme", "-c", "/opt/oai-mme/etc/mme.conf"]
+

@@ -33,6 +33,6 @@
     "statfreq": 2000,
     "numworkers": 4,
     "concurrent": 10,
-    "ossfile": "oss.json"    
+    "ossfile": "/opt/oai-hss/etc/oss.json"    
  }
 }
