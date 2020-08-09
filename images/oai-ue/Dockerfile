@@ -22,12 +22,17 @@ COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
 
 RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${APP_DIR}/bin/ \
+    && cp openairinterface5g/targets/bin/conf2uedata ${APP_DIR}/bin/ \
+	&& cp openairinterface5g/targets/bin/nvram ${APP_DIR}/bin/ \
+	&& cp openairinterface5g/targets/bin/usim ${APP_DIR}/bin/ \
+	&& cp openairinterface5g/targets/bin/ue_ip.ko ${APP_DIR}/bin/ \
     && cp openairinterface5g/cmake_targets/lte_build_oai/build/*.so* ${APP_DIR}/lib/ \
     && cd ${APP_DIR}/lib \
     && ln -sf liboai_eth_transpro.so liboai_transpro.so \
     && ln -sf liboai_usrpdevif.so liboai_device.so \
     && ln -sf libuhd.so.3.13 libuhd.so.3 \
     && ln -sf libuhd.so.3 libuhd.so
+	
 	
 RUN chmod -R u+x ${APP_ROOT} && \
     chgrp -R 0 ${APP_ROOT} && \
