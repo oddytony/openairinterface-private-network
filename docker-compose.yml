@@ -161,6 +161,16 @@ services:
         ipv4_address: 192.168.18.199
         aliases:
           - oai-ue.local.net
+  provisioner:
+    build:
+      context: ./images/provisioner/
+    image: provisioner
+    env_file:
+      - ./envs/provisioner.env
+    depends_on:
+      - oai-cassandra
+      - cassandra-init
+    command: ["./bin/wait-for-it", "-t", "60", "oai-cassandra:9042", "--", "./bin/provision_users.sh"] 
   cassandra-init:
     build:
       context: ./images/cassandra/
