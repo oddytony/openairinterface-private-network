@@ -79,12 +79,12 @@ def main():
     cluster = Cluster([args.cassandra_cluster])
 
     session = cluster.connect()
-	session.default_timeout = 120
+    session.default_timeout = 120.0
     # session.set_keyspace('mykeyspace')
 
-    if str2bool(args.truncate):
-        session.execute("""TRUNCATE vhss.msisdn_imsi ;""")
-        session.execute("""TRUNCATE vhss.users_imsi ;""")
+    #if str2bool(args.truncate):
+        #session.execute("""TRUNCATE vhss.msisdn_imsi ;""")
+        #session.execute("""TRUNCATE vhss.users_imsi ;""")
 
     imsi_first_int = int(args.imsi_first)
     imsi_length = len(args.imsi_first)
