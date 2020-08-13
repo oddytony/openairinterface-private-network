@@ -5,6 +5,7 @@ services:
     build:
       context: ./images/oai-hss/
     image: oai-hss
+    restart: always
     depends_on:
       - oai-cassandra
     env_file:
@@ -28,6 +29,7 @@ services:
     build:
       context: ./images/oai-mme/
     image: oai-mme
+    restart: always
     depends_on:
       - oai-hss
       - oai-spgwc
@@ -54,6 +56,7 @@ services:
     build:
       context: ./images/oai-spgwc/
     image: oai-spgwc
+    restart: always
     env_file:
       - ./envs/spgwc.env 
     ports:
@@ -77,6 +80,7 @@ services:
     build:
       context: ./images/oai-spgwu/
     image: oai-spgwu
+    restart: always
     env_file:
       - ./envs/spgwu.env
     ports:
@@ -103,6 +107,7 @@ services:
     build:
       context: ./images/oai-enb/
     image: oai-enb
+    restart: always
     depends_on:
       - oai-mme
       - oai-spgwc
@@ -141,6 +146,7 @@ services:
     build:
       context: ./images/oai-ue/
     image: oai-ue
+    restart: always
     depends_on:
       - oai-enb
     env_file:
@@ -170,7 +176,7 @@ services:
     depends_on:
       - oai-cassandra
       - cassandra-init
-    command: ["./bin/wait-for-it", "-t", "60", "oai-cassandra:9042", "--", "./bin/provision_users.sh"] 
+    command: ["./bin/wait-for-it.sh", "-t", "60", "oai-cassandra:9042", "--", "./bin/provision_users.sh"] 
   cassandra-init:
     build:
       context: ./images/cassandra/
