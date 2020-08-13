@@ -1,5 +1,3 @@
-FROM oai-epc-base as base
-
 FROM ubuntu:bionic
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -21,8 +19,6 @@ ENV APP_ROOT=/opt/oai-hss
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 
 COPY scripts ${APP_ROOT}/bin/
-COPY --from=base /root/openair-cn/scripts/data_provisioning_users ${APP_ROOT}/bin/
-COPY --from=base /root/openair-cn/scripts/data_provisioning_users.sh ${APP_ROOT}/bin/
 
 RUN chmod -R u+x ${APP_ROOT} && \
     chgrp -R 0 ${APP_ROOT} && \
