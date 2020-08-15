@@ -20,6 +20,7 @@ ENV APP_DIR=/usr/local
 
 COPY scripts ${APP_ROOT}/bin/
 COPY configs ${APP_ROOT}/etc/
+COPY scripts/init_nas_s1 ${APP_DIR}/bin/
 
 RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${APP_DIR}/bin/ \
     && cp openairinterface5g/targets/bin/conf2uedata ${APP_DIR}/bin/ \
