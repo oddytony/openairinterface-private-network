@@ -128,7 +128,7 @@ services:
     privileged: true
     hostname: oai-enb
     domainname: local.net
-    command: ["/opt/oai-enb/bin/wait-for-it.sh", "-t", "60", "oai-mme:2123", "--", "/usr/local/bin/lte-softmodem", "-O", "/opt/oai-enb/etc/enb.conf"]
+    command: ["/opt/oai-enb/bin/wait-for-it.sh", "-t", "60", "oai-mme:2123", "--", "/usr/local/bin/lte-softmodem", "--basicsim", "-O", "/opt/oai-enb/etc/enb.conf"]
     networks:
       net1:
         ipv4_address: 192.168.1.101
@@ -162,7 +162,7 @@ services:
     network_mode: host
     hostname: oai-ue
     domainname: local.net
-    command: ["/usr/local/bin/lte-uesoftmodem", "-C", "2680000000", "-r", "25", "-O", "/opt/oai-ue/etc/ue.conf"]
+    command: ["/usr/local/bin/lte-uesoftmodem", "-C", "2680000000", "-r", "25", "--basicsim" ]
    
   cassandra-init:
     build:
