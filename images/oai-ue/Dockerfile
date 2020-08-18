@@ -12,7 +12,7 @@ LABEL name="oai-ue" \
 WORKDIR /root
 
 RUN cd openairinterface5g/cmake_targets \
-   && ./build_oai -c --UE -w USRP --verbose-compile 
+   && ./build_oai -c --UE --verbose-compile 
    
 
 ENV APP_ROOT=/opt/oai-ue
@@ -33,7 +33,8 @@ RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${AP
     && ln -sf liboai_usrpdevif.so liboai_device.so \
     && ln -sf libuhd.so.3.13 libuhd.so.3 \
     && ln -sf libuhd.so.3 libuhd.so \
-	&& apt-get update && apt-get install -y kmod
+	&& apt-get update && apt-get install -y kmod \
+	&& conf2uedata -c ${APP_ROOT}/etc/ue_sim.conf -o ${APP_DIR}/bin
 	
 	
 RUN chmod -R u+x ${APP_ROOT} && \
@@ -44,6 +45,5 @@ RUN chmod -R u+x ${APP_ROOT} && \
 EXPOSE 50000/udp 50001/udp
 
 CMD ["/usr/local/bin/lte-uesoftmodem", \
-    "-C", "2680000000", "-r", "25", \
-    "-O", "/opt/oai-ue/etc/ue.conf"]
+    "-C", "2680000000", "-r", "25", "--basicsim" ]
 ENTRYPOINT ["/opt/oai-ue/bin/entrypoint.sh"]

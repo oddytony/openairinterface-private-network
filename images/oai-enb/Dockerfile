@@ -12,7 +12,7 @@ LABEL name="oai-enb" \
 WORKDIR /root
 
 RUN cd openairinterface5g/cmake_targets \
-    && ./build_oai -c --eNB -w USRP --verbose-compile 
+    && ./build_oai -c --eNB --verbose-compile 
 	
 ENV APP_ROOT=/opt/oai-enb
 ENV APP_DIR=/usr/local
@@ -30,10 +30,7 @@ RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-softmodem ${APP_
 	
 RUN chmod -R u+x ${APP_ROOT} && \
     chgrp -R 0 ${APP_ROOT} && \
-    chmod -R g=u ${APP_ROOT} /etc/passwd && \
-    mkdir -p /dev/net && \
-	mknod /dev/net/tun c 10 200 && \
-	chmod 600 /dev/net/tun
+    chmod -R g=u ${APP_ROOT} /etc/passwd 
 
 # S1U, GTP/UDP
 EXPOSE 2152/udp 
@@ -47,5 +44,5 @@ EXPOSE 50000/udp
 # IF5 / ECPRI (data)
 EXPOSE 50001/udp
 
-CMD ["/usr/local/bin/lte-softmodem", "-O", "/opt/oai-enb/etc/enb.conf"]
+CMD ["/usr/local/bin/lte-softmodem", "--basicsim", "-O", "/opt/oai-enb/etc/enb.conf"]
 ENTRYPOINT ["/opt/oai-enb/bin/entrypoint.sh"]
