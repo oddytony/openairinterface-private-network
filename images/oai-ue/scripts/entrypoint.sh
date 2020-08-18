@@ -24,6 +24,6 @@ EXPRESSIONS="${EXPRESSIONS#';'}"
 # render template and write to ue.conf
 sed "${EXPRESSIONS}" ${TEMPLATE} > ${CONFIG_DIR}/ue.conf
 
-init_nas_s1 UE
+/opt/oai-ue/bin/init_nas_s1 UE
 
 exec "$@"
