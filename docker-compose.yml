@@ -151,22 +151,19 @@ services:
       - oai-enb
     env_file:
       - ./envs/ue.env
-    devices:
-      - "/dev/net/tun:/dev/net/tun"
     ports:
       - "50000:50000"
       - "50001:50001"
+    volumes:
+      - /lib/modules:/lib/modules 
     cap_add:
-      - NET_ADMIN
+      - ALL
     privileged: true
+    network_mode: host
     hostname: oai-ue
     domainname: local.net
-    command: ["/opt/oai-ue/bin/wait-for-it.sh", "-t", "60", "oai-enb:50000", "--", "/usr/local/bin/lte-uesoftmodem", "-C", "2680000000", "-r", "25", "--nokrnmod", "1", "-O", "/opt/oai-ue/etc/ue.conf"]
-    networks:
-      net6:
-        ipv4_address: 192.168.18.199
-        aliases:
-          - oai-ue.local.net
+    command: ["/usr/local/bin/lte-uesoftmodem", "-C", "2680000000", "-r", "25", "-O", "/opt/oai-ue/etc/ue.conf"]
+   
   cassandra-init:
     build:
       context: ./images/cassandra/
