@@ -25,6 +25,5 @@ EXPRESSIONS="${EXPRESSIONS#';'}"
 sed "${EXPRESSIONS}" ${TEMPLATE} > ${CONFIG_DIR}/ue.conf
 
 /opt/oai-ue/bin/init_nas_s1 UE
-conf2uedata -c /opt/oai-ue/etc/ue_sim.conf -o /usr/local/bin
 
 exec "$@"
