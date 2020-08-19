@@ -33,8 +33,7 @@ RUN cp openairinterface5g/cmake_targets/lte_build_oai/build/lte-uesoftmodem ${AP
     && ln -sf liboai_usrpdevif.so liboai_device.so \
     && ln -sf libuhd.so.3.13 libuhd.so.3 \
     && ln -sf libuhd.so.3 libuhd.so \
-	&& apt-get update && apt-get install -y kmod \
-	&& conf2uedata -c ${APP_ROOT}/etc/ue_sim.conf -o .
+	&& apt-get update && apt-get install -y kmod 
 	
 	
 RUN chmod -R u+x ${APP_ROOT} && \
