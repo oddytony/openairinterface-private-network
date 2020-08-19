@@ -42,6 +42,7 @@ RUN chmod -R u+x ${APP_ROOT} && \
 
 # expose ports from ue.conf
 EXPOSE 50000/udp 50001/udp
+EXPOSE 4043/tcp
 
 CMD ["/usr/local/bin/lte-uesoftmodem", \
     "-C", "2680000000", "-r", "25", "--basicsim" ]

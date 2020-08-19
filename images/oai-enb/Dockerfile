@@ -43,6 +43,7 @@ EXPOSE 36422/udp
 EXPOSE 50000/udp
 # IF5 / ECPRI (data)
 EXPOSE 50001/udp
+EXPOSE 4043/tcp
 
 CMD ["/usr/local/bin/lte-softmodem", "--basicsim", "-O", "/opt/oai-enb/etc/enb.conf"]
 ENTRYPOINT ["/opt/oai-enb/bin/entrypoint.sh"]

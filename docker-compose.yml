@@ -10,11 +10,6 @@ services:
       - oai-cassandra
     env_file:
       - ./envs/hss.env
-    ports:
-      - "3868:3868"
-      - "5868:5868"
-      - "9080:9080"
-      - "9081:9081"
     hostname: oai-hss
     domainname: local.net
     command: ["/opt/oai-hss/bin/wait-for-it.sh", "-t", "60", "oai-cassandra:9042", "--", "/usr/local/bin/oai_hss", "-j", "/opt/oai-hss/etc/hss_rel14.json"]
@@ -59,9 +54,6 @@ services:
     restart: always
     env_file:
       - ./envs/spgwc.env 
-    ports:
-      - "8805:8805"
-      - "2123:2123"
     cap_add:
       - NET_ADMIN
     hostname: oai-spgwc
@@ -83,9 +75,6 @@ services:
     restart: always
     env_file:
       - ./envs/spgwu.env
-    ports:
-      - "8805:8805"
-      - "2152:2152"
     cap_add:
       - NET_ADMIN
     hostname: oai-spgwu
@@ -117,18 +106,13 @@ services:
     devices:
       - "/dev/net/tun:/dev/net/tun"
     ports:
-      - "22100:22100"
-      - "2152:2152"
-      - "36412:36412"
-      - "36422:36422"
-      - "50000:50000"
-      - "50001:50001"
+      - "40430:4043"
     cap_add:
       - NET_ADMIN
     privileged: true
     hostname: oai-enb
     domainname: local.net
-    command: ["/opt/oai-enb/bin/wait-for-it.sh", "-t", "60", "oai-mme:2123", "--", "/usr/local/bin/lte-softmodem", "--basicsim", "-O", "/opt/oai-enb/etc/enb.conf"]
+    command: ["/opt/oai-enb/bin/wait-for-it.sh", "-t", "30", "oai-mme:2123", "--", "/usr/local/bin/lte-softmodem", "--basicsim", "-O", "/opt/oai-enb/etc/enb.conf"]
     networks:
       net1:
         ipv4_address: 192.168.1.101
@@ -152,8 +136,7 @@ services:
     env_file:
       - ./envs/ue.env
     ports:
-      - "50000:50000"
-      - "50001:50001"
+      - "40431:4043"
     volumes:
       - /lib/modules:/lib/modules 
     cap_add:
