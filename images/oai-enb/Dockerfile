@@ -45,5 +45,5 @@ EXPOSE 50000/udp
 EXPOSE 50001/udp
 EXPOSE 4043/tcp
 
-CMD ["/usr/local/bin/lte-softmodem", "--basicsim", "-O", "/opt/oai-enb/etc/enb.conf"]
+CMD ["/usr/local/bin/lte-softmodem", "--rfsim", "-O", "/opt/oai-enb/etc/enb.conf"]
 ENTRYPOINT ["/opt/oai-enb/bin/entrypoint.sh"]

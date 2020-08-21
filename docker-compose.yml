@@ -106,13 +106,13 @@ services:
     devices:
       - "/dev/net/tun:/dev/net/tun"
     ports:
-      - "40430:4043"
+      - "4043:4043"
     cap_add:
       - NET_ADMIN
     privileged: true
     hostname: oai-enb
     domainname: local.net
-    command: ["/opt/oai-enb/bin/wait-for-it.sh", "-t", "30", "oai-mme:2123", "--", "/usr/local/bin/lte-softmodem", "--basicsim", "-O", "/opt/oai-enb/etc/enb.conf"]
+    command: ["/usr/local/bin/lte-softmodem", "--rfsim", "-O", "/opt/oai-enb/etc/enb.conf"]
     networks:
       net1:
         ipv4_address: 192.168.1.101
@@ -122,10 +122,7 @@ services:
         ipv4_address: 172.16.2.101
         aliases:
           - oai-enb.local.net
-      net6:
-        ipv4_address: 192.168.18.206
-        aliases:
-          - oai-enb.local.net
+      default: {}
   oai-ue:
     build:
       context: ./images/oai-ue/
@@ -135,8 +132,6 @@ services:
       - oai-enb
     env_file:
       - ./envs/ue.env
-    ports:
-      - "40431:4043"
     volumes:
       - /lib/modules:/lib/modules 
     cap_add:
@@ -145,7 +140,7 @@ services:
     network_mode: host
     hostname: oai-ue
     domainname: local.net
-    command: ["/usr/local/bin/lte-uesoftmodem", "-C", "2680000000", "-r", "25", "--basicsim" ]
+    command: ["/usr/local/bin/lte-uesoftmodem", "-C", "2680000000", "-r", "25", "--rfsim" ]
    
   cassandra-init:
     build:
@@ -215,10 +210,3 @@ networks:
     ipam:
      config:
        - subnet: 192.168.3.0/24
-  net6:
-    driver: macvlan
-    driver_opts:
-      macvlan_mode: bridge
-    ipam:
-     config:
-       - subnet: 192.168.18.0/24
