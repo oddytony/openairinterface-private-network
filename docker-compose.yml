@@ -5,15 +5,11 @@ services:
     build:
       context: ./images/oai-hss/
     image: oai-hss
+    restart: always
     depends_on:
       - oai-cassandra
     env_file:
       - ./envs/hss.env
-    ports:
-      - "3868:3868"
-      - "5868:5868"
-      - "9080:9080"
-      - "9081:9081"
     hostname: oai-hss
     domainname: local.net
     command: ["/opt/oai-hss/bin/wait-for-it.sh", "-t", "60", "oai-cassandra:9042", "--", "/usr/local/bin/oai_hss", "-j", "/opt/oai-hss/etc/hss_rel14.json"]
@@ -28,6 +24,7 @@ services:
     build:
       context: ./images/oai-mme/
     image: oai-mme
+    restart: always
     depends_on:
       - oai-hss
       - oai-spgwc
@@ -54,11 +51,9 @@ services:
     build:
       context: ./images/oai-spgwc/
     image: oai-spgwc
+    restart: always
     env_file:
       - ./envs/spgwc.env 
-    ports:
-      - "8805:8805"
-      - "2123:2123"
     cap_add:
       - NET_ADMIN
     hostname: oai-spgwc
@@ -77,11 +72,9 @@ services:
     build:
       context: ./images/oai-spgwu/
     image: oai-spgwu
+    restart: always
     env_file:
       - ./envs/spgwu.env
-    ports:
-      - "8805:8805"
-      - "2152:2152"
     cap_add:
       - NET_ADMIN
     hostname: oai-spgwu
@@ -103,6 +96,7 @@ services:
     build:
       context: ./images/oai-enb/
     image: oai-enb
+    restart: always
     depends_on:
       - oai-mme
       - oai-spgwc
@@ -112,18 +106,13 @@ services:
     devices:
       - "/dev/net/tun:/dev/net/tun"
     ports:
-      - "22100:22100"
-      - "2152:2152"
-      - "36412:36412"
-      - "36422:36422"
-      - "50000:50000"
-      - "50001:50001"
+      - "40430:4043"
     cap_add:
       - NET_ADMIN
     privileged: true
     hostname: oai-enb
     domainname: local.net
-    command: ["/opt/oai-enb/bin/wait-for-it.sh", "-t", "60", "oai-mme:2123", "--", "/usr/local/bin/lte-softmodem", "-O", "/opt/oai-enb/etc/enb.conf"]
+    command: ["/opt/oai-enb/bin/wait-for-it.sh", "-t", "30", "oai-mme:2123", "--", "/usr/local/bin/lte-softmodem", "--basicsim", "-O", "/opt/oai-enb/etc/enb.conf"]
     networks:
       net1:
         ipv4_address: 192.168.1.101
@@ -141,26 +130,23 @@ services:
     build:
       context: ./images/oai-ue/
     image: oai-ue
+    restart: always
     depends_on:
       - oai-enb
     env_file:
       - ./envs/ue.env
-    devices:
-      - "/dev/net/tun:/dev/net/tun"
     ports:
-      - "50000:50000"
-      - "50001:50001"
+      - "40431:4043"
+    volumes:
+      - /lib/modules:/lib/modules 
     cap_add:
-      - NET_ADMIN
+      - ALL
     privileged: true
+    network_mode: host
     hostname: oai-ue
     domainname: local.net
-    command: ["/opt/oai-ue/bin/wait-for-it.sh", "-t", "60", "oai-enb:50000", "--", "/usr/local/bin/lte-uesoftmodem", "-C", "2680000000", "-r", "25", "--nokrnmod", "1", "-O", "/opt/oai-ue/etc/ue.conf"]
-    networks:
-      net6:
-        ipv4_address: 192.168.18.199
-        aliases:
-          - oai-ue.local.net
+    command: ["/usr/local/bin/lte-uesoftmodem", "-C", "2680000000", "-r", "25", "--basicsim" ]
+   
   cassandra-init:
     build:
       context: ./images/cassandra/
@@ -170,6 +156,7 @@ services:
     command: ["./wait-for-it", "-t", "60", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/oai_db.cql"] 
   oai-cassandra:
     image: cassandra
+    restart: always
     volumes:
       - cassandra-data:/var/lib/cassandra:rw
     env_file:
@@ -180,7 +167,15 @@ services:
       - "7000:7000"
       - "7001:7001"
       - "9042:9042"
-
+  provisioner:
+    build:
+      context: ./images/provisioner/
+    image: provisioner
+    env_file:
+      - ./envs/provisioner.env
+    depends_on:
+      - cassandra-init
+    command: ["./bin/wait-for-it.sh", "-t", "60", "oai-cassandra:9042", "--", "./bin/provision_users.sh"] 
 volumes:
   cassandra-data:
 

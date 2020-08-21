@@ -31,4 +31,4 @@ RUN patch -p1 -d openair-cn-cups < patches/0001-enable-sudoless-build.patch
 
 RUN cd openair-cn-cups/build/scripts \
     && ./build_spgwu -c -v -f -I -b RelWithDebInfo -j \
-    && ./build_spgwc -c -v -f -I -b RelWithDebInfo -j 
+    && ./build_spgwc -c -v -I -b RelWithDebInfo -j 
