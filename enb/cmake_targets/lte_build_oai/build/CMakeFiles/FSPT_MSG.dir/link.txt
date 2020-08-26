@@ -1,2 +1,0 @@
-/usr/bin/ar qc libFSPT_MSG.a  CMakeFiles/FSPT_MSG.dir/CMakeFiles/FSPT_V2/flexsplit.pb-c.c.o
-/usr/bin/ranlib libFSPT_MSG.a

@@ -1,3 +1,0 @@
-file(REMOVE_RECURSE
-  "libFLEXRAN_AGENT.a"
-)
