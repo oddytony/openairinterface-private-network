@@ -1,0 +1,212 @@
+version: '3.4'
+
+services:
+  oai-hss:
+    build:
+      context: ./images/oai-hss/
+    image: oai-hss
+    restart: always
+    depends_on:
+      - oai-cassandra
+    env_file:
+      - ./envs/hss.env
+    hostname: oai-hss
+    domainname: local.net
+    command: ["/opt/oai-hss/bin/wait-for-it.sh", "-t", "60", "oai-cassandra:9042", "--", "/usr/local/bin/oai_hss", "-j", "/opt/oai-hss/etc/hss_rel14.json"]
+    networks:
+      net1:
+        ipv4_address: 192.168.1.102
+        aliases:
+          - oai-hss.local.net
+      default: {}
+
+  oai-mme:
+    build:
+      context: ./images/oai-mme/
+    image: oai-mme
+    restart: always
+    depends_on:
+      - oai-hss
+      - oai-spgwc
+    env_file:
+      - ./envs/mme.env 
+    ports:
+      - "3870:3870"
+      - "5870:5870"
+      - "2123:2123"
+    hostname: oai-mme
+    domainname: local.net
+    command: ["/opt/oai-mme/bin/wait-for-it.sh", "-t", "60", "oai-hss:3868", "--", "/usr/local/bin/mme", "-c", "/opt/oai-mme/etc/mme.conf"]
+    networks:
+      net1:
+        ipv4_address: 192.168.1.100
+        aliases:
+          - oai-mme.local.net
+      net2:
+        ipv4_address: 172.16.1.100
+        aliases:
+          - oai-mme.local.net
+      
+  oai-spgwc:
+    build:
+      context: ./images/oai-spgwc/
+    image: oai-spgwc
+    restart: always
+    env_file:
+      - ./envs/spgwc.env 
+    cap_add:
+      - NET_ADMIN
+    hostname: oai-spgwc
+    domainname: local.net
+    networks:
+      net3:
+        ipv4_address: 192.168.2.100
+        aliases:
+          - oai-spgwc.local.net
+      net2:
+        ipv4_address: 172.16.1.101
+        aliases:
+          - oai-spgwc.local.net
+      
+  oai-spgwu:
+    build:
+      context: ./images/oai-spgwu/
+    image: oai-spgwu
+    restart: always
+    env_file:
+      - ./envs/spgwu.env
+    cap_add:
+      - NET_ADMIN
+    hostname: oai-spgwu
+    domainname: local.net
+    networks:
+      net3:
+        ipv4_address: 192.168.2.101 
+        aliases:
+          - oai-spgwu.local.net
+      net4:
+        ipv4_address: 172.16.2.100
+        aliases:
+          - oai-spgwu.local.net
+      net5:
+        ipv4_address: 192.168.3.100
+        aliases:
+          - oai-spgwu.local.net
+  oai-enb:
+    build:
+      context: ./images/oai-enb/
+    image: oai-enb
+    restart: always
+    depends_on:
+      - oai-mme
+      - oai-spgwc
+      - oai-spgwu
+    env_file:
+      - ./envs/enb.env
+    devices:
+      - "/dev/net/tun:/dev/net/tun"
+    ports:
+      - "4043:4043"
+    cap_add:
+      - NET_ADMIN
+    privileged: true
+    hostname: oai-enb
+    domainname: local.net
+    command: ["/usr/local/bin/lte-softmodem", "--rfsim", "-O", "/opt/oai-enb/etc/enb.conf"]
+    networks:
+      net1:
+        ipv4_address: 192.168.1.101
+        aliases:
+          - oai-enb.local.net        
+      net4:
+        ipv4_address: 172.16.2.101
+        aliases:
+          - oai-enb.local.net
+      default: {}
+  oai-ue:
+    build:
+      context: ./images/oai-ue/
+    image: oai-ue
+    restart: always
+    depends_on:
+      - oai-enb
+    env_file:
+      - ./envs/ue.env
+    volumes:
+      - /lib/modules:/lib/modules 
+    cap_add:
+      - ALL
+    privileged: true
+    network_mode: host
+    hostname: oai-ue
+    domainname: local.net
+    command: ["/usr/local/bin/lte-uesoftmodem", "-C", "2680000000", "-r", "25", "--rfsim" ]
+   
+  cassandra-init:
+    build:
+      context: ./images/cassandra/
+    image: cassandra-init
+    depends_on:
+      - oai-cassandra
+    command: ["./wait-for-it", "-t", "60", "oai-cassandra:9042", "--", "cqlsh", "oai-cassandra", "--file", "/oai_db.cql"] 
+  oai-cassandra:
+    image: cassandra
+    restart: always
+    volumes:
+      - cassandra-data:/var/lib/cassandra:rw
+    env_file:
+      - ./envs/cassandra.env
+    hostname: oai-cassandra
+    domainname: oai-cassandra.local.net
+    ports:
+      - "7000:7000"
+      - "7001:7001"
+      - "9042:9042"
+  provisioner:
+    build:
+      context: ./images/provisioner/
+    image: provisioner
+    env_file:
+      - ./envs/provisioner.env
+    depends_on:
+      - cassandra-init
+    command: ["./bin/wait-for-it.sh", "-t", "60", "oai-cassandra:9042", "--", "./bin/provision_users.sh"] 
+volumes:
+  cassandra-data:
+
+networks:
+  net1:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 192.168.1.0/24
+  net2:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 172.16.1.0/24
+  net3:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 192.168.2.0/24
+  net4:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 172.16.2.0/24
+  net5:
+    driver: macvlan
+    driver_opts:
+      macvlan_mode: bridge
+    ipam:
+     config:
+       - subnet: 192.168.3.0/24

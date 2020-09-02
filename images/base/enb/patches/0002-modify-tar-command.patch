@@ -1,0 +1,26 @@
+From 87f24f21468dfd2eaaf099710df9c819c064f75a Mon Sep 17 00:00:00 2001
+From: manexwayo <wayomanasseh@gmail.com>
+Date: Thu, 16 Jul 2020 20:18:56 +0100
+Subject: [PATCH 2/2] modify tar command
+
+---
+ cmake_targets/tools/build_helper | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/cmake_targets/tools/build_helper b/cmake_targets/tools/build_helper
+index ff6ad1b..1773de2 100755
+--- a/cmake_targets/tools/build_helper
++++ b/cmake_targets/tools/build_helper
+@@ -218,7 +218,8 @@ install_protobuf_from_source(){
+     #cd protobuf-2.6.1/
+     rm -rf /tmp/protobuf-cpp-3.3.0.tar.gz* /tmp/protobuf-3.3.0
+     wget https://github.com/google/protobuf/releases/download/v3.3.0/protobuf-cpp-3.3.0.tar.gz
+-    tar -xzvf protobuf-cpp-3.3.0.tar.gz --owner $USER --group $(groups | cut -d" " -f1) --no-same-owner
++    #tar -xzvf protobuf-cpp-3.3.0.tar.gz --owner $USER --group $(groups | cut -d" " -f1) --no-same-owner
++	tar -xvzf protobuf-cpp-3.3.0.tar.gz 
+     cd protobuf-3.3.0/
+     ./configure
+     echo "Compiling protobuf"
+-- 
+2.25.1.windows.1
+
