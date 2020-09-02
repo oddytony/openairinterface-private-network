@@ -1,0 +1,25 @@
+From 77158b62a9da166d64f070aaae8e73564f4b8e99 Mon Sep 17 00:00:00 2001
+From: manexwayo <wayomanasseh@gmail.com>
+Date: Thu, 9 Jul 2020 14:31:37 +0100
+Subject: [PATCH] enable sudoless build
+
+---
+ build/scripts/build_helper | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/scripts/build_helper b/build/scripts/build_helper
+index 26733c8..b4cfdbe 100644
+--- a/build/scripts/build_helper
++++ b/build/scripts/build_helper
+@@ -39,7 +39,7 @@ case "$OS_DISTRO" in
+   ubuntu) OS_BASEDISTRO="debian"; INSTALLER="apt-get"; CMAKE="cmake" ;;
+ esac
+ 
+-SUDO='sudo -S -E'
++SUDO=''
+ 
+ ###############################
+ ## echo and  family
+-- 
+2.25.1.windows.1
+
