@@ -607,7 +607,7 @@ check_install_oai_software() {
         echo_error "Your distribution $(get_distribution_release) is not supported by oai !"
         exit 1
     fi
-    $ $INSTALLER update -y
+    $INSTALLER update -y
   if [[ "$OS_DISTRO" == "ubuntu" ]]; then
     local LAPACK_LIBNAME="liblapack.so"
     local LAPACK_TARGET="/usr/lib/atlas-base/atlas/liblapack.so"
