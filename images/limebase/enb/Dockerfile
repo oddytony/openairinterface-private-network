@@ -20,6 +20,6 @@ WORKDIR /root
 RUN git clone --depth=1 --branch=lime2 https://github.com/oddytony/openairinterface-private-network.git
 
 RUN cd openairinterface-private-network/source/cmake_targets \
-    && ./build_oai -I --install-system-files -w LMSSDR
+    && ./build_oai -I --install-system-files -w LMSSDR \
+    && ./build_oai --eNB -w LMSSDR
 
-RUN ./build_oai --eNB -w LMSSDR
