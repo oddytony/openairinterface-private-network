@@ -611,7 +611,7 @@ check_install_oai_software() {
   if [[ "$OS_DISTRO" == "ubuntu" ]]; then
     local LAPACK_LIBNAME="liblapack.so"
     local LAPACK_TARGET="/usr/lib/atlas-base/atlas/liblapack.so"
-    $ apt install -y software-properties-common
+    apt install -y software-properties-common
     case "$(get_distribution_release)" in
         "ubuntu14.04")
             specific_packages="libtasn1-3-dev libgnutls-dev libatlas-dev iproute libconfig8-dev"
