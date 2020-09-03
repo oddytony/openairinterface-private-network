@@ -23,6 +23,6 @@ RUN cd openairinterface-private-network/source/cmake_targets \
     && ./build_oai -I --install-system-files -w LMSSDR 
 
 RUN cd openairinterface-private-network/source/cmake_targets \
-    && ./build_oai --eNB -w LMSSDR
+    && ./build_oai --eNB -w LMSSDR -I
     
 
