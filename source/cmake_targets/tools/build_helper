@@ -40,8 +40,6 @@ esac
 KERNEL_VERSION=$(uname -r | cut -d '.' -f1)
 KERNEL_MAJOR=$(uname -r | cut -d '.' -f2)
 
-SUDO='sudo -E'
-
 ###############################
 ## echo and  family
 ###############################
@@ -214,8 +212,8 @@ install_protobuf_from_source(){
     echo "Downloading protobuf"
     #rm -rf /tmp/protobuf-2.6.1.tar.gz* /tmp/protobuf-2.6.1
     #wget https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz
-    #tar -xzvf protobuf-2.6.1.tar.gz --owner $USER --group $USER --no-same-owner
-    #cd protobuf-2.6.1/
+    #tar -xzvf protobuf-cpp-3.3.0.tar.gz --owner $USER --group $(groups | cut -d" " -f1) --no-same-owner
+    tar -xvzf protobuf-cpp-3.3.0.tar.gz     #cd protobuf-2.6.1/
     rm -rf /tmp/protobuf-cpp-3.3.0.tar.gz* /tmp/protobuf-3.3.0
     wget https://github.com/google/protobuf/releases/download/v3.3.0/protobuf-cpp-3.3.0.tar.gz
     tar -xzvf protobuf-cpp-3.3.0.tar.gz --owner $USER --group $(groups | cut -d" " -f1) --no-same-owner
