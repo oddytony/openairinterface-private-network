@@ -712,6 +712,7 @@ check_install_oai_software() {
     fi
 
      $INSTALLER install -y \
+      $specific_packages \
       autoconf \
       automake \
       bc \
@@ -781,7 +782,7 @@ install_asn1c_from_source(){
     asn1_install_log=$OPENAIR_DIR/cmake_targets/log/asn1c_install_log.txt
     echo_info "\nInstalling ASN1. The log file for ASN1 installation is here: $asn1_install_log "
     (
-     rm -rf /tmp/asn1c
+    $ rm -rf /tmp/asn1c
     # GIT_SSL_NO_VERIFY=true git clone https://gitlab.eurecom.fr/oai/asn1c.git /tmp/asn1c
     git clone https://gitlab.eurecom.fr/oai/asn1c.git /tmp/asn1c
     cd /tmp/asn1c
