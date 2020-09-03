@@ -636,8 +636,8 @@ check_install_oai_software() {
             LAPACK_TARGET="/usr/lib/x86_64-linux-gnu/atlas/liblapack.so"
             ;;
     esac
-    $ apt-get install -y \
-    $specific_packages \
+    apt-get install -y \
+    specific_packages \
 	autoconf  \
 	automake  \
 	bison  \
@@ -695,23 +695,23 @@ check_install_oai_software() {
 	libxpm-dev \
         libboost-all-dev
 
-    $ update-alternatives --set "$LAPACK_LIBNAME" "$LAPACK_TARGET"
+    update-alternatives --set "$LAPACK_LIBNAME" "$LAPACK_TARGET"
 
-    $ apt-get install -y nettle-dev nettle-bin
+  apt-get install -y nettle-dev nettle-bin
   elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
     if [[ "$OS_DISTRO" == "rhel" ]] || [[ "$OS_DISTRO" == "centos" ]]; then
       if rpm -q epel-release > /dev/null; then
         echo "EPEL repos already present. Good."
       else
         echo "EPEL repos not present. Installing them."
-        $ $INSTALLER install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+         $INSTALLER install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
       fi
-      $ $INSTALLER install -y python-epdb vim-common
+       $INSTALLER install -y python-epdb vim-common
     else
-      $ $INSTALLER install -y mscgen pydb
+       $INSTALLER install -y mscgen pydb
     fi
 
-    $ $INSTALLER install -y \
+     $INSTALLER install -y \
       autoconf \
       automake \
       bc \
@@ -781,7 +781,7 @@ install_asn1c_from_source(){
     asn1_install_log=$OPENAIR_DIR/cmake_targets/log/asn1c_install_log.txt
     echo_info "\nInstalling ASN1. The log file for ASN1 installation is here: $asn1_install_log "
     (
-    $ rm -rf /tmp/asn1c
+     rm -rf /tmp/asn1c
     # GIT_SSL_NO_VERIFY=true git clone https://gitlab.eurecom.fr/oai/asn1c.git /tmp/asn1c
     git clone https://gitlab.eurecom.fr/oai/asn1c.git /tmp/asn1c
     cd /tmp/asn1c
