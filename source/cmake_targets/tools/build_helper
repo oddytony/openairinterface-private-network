@@ -215,19 +215,19 @@ install_protobuf_from_source(){
     #tar -xzvf protobuf-cpp-3.3.0.tar.gz --owner $USER --group $(groups | cut -d" " -f1) --no-same-owner
     #tar -xvzf protobuf-cpp-3.3.0.tar.gz     #cd protobuf-2.6.1/
     #rm -rf /tmp/protobuf-cpp-3.3.0.tar.gz* /tmp/protobuf-3.3.0
-    wget https://github.com/google/protobuf/releases/download/v3.3.0/protobuf-cpp-3.3.0.tar.gz
     #tar -xzvf protobuf-cpp-3.3.0.tar.gz --owner $USER --group $(groups | cut -d" " -f1) --no-same-owner
-   
-
-      git clone https://github.com/protocolbuffers/protobuf.git
-    cd protobuf
-    git submodule update --init --recursive
-    ./autogen.sh
+    wget https://github.com/google/protobuf/releases/download/v3.3.0/protobuf-cpp-3.3.0.tar.gz
+    echo "download complete"
+    tar xzf protobuf-cpp-3.3.0.tar.gz
+    echo "tar complete"
+    apt-get update
+    apt-get install build-essential
+    cd protobuf-3.3.0/
     ./configure
-     make
-     make check
+    echo "Compiling protobuf"
+    make -j`nproc`
      make install
-     ldconfig # refresh shared library cache.
+     ldconfig
         ) >& $protobuf_install_log
 }
 
