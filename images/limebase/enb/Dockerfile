@@ -15,6 +15,12 @@ RUN apt-get update && apt-get install -y gcc g++ build-essential git curl wget \
  xxd linux-headers-5.3.0-1032-gcp iproute2 iputils-arping iputils-ping \
  iputils-tracepath bind9 
 
+RUN add-apt-repository -y ppa:myriadrf/drivers \
+&& apt-get update \
+&& apt-get install limesuite liblimesuite-dev limesuite-udev limesuite-images \
+&& apt-get install soapysdr-tools soapysdr-module-lms7 \
+&& apt-get install soapysdr soapysdr-module-lms7
+
 WORKDIR /root
 
 RUN git clone --depth=1 --branch=lime2 https://github.com/oddytony/openairinterface-private-network.git
